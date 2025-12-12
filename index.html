@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>MecPrice – Orçamentos Automotivos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#facc15">
+
+  <!-- Ícones do app (substitua pelos seus arquivos PNG) -->
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>MecPrice</h1>
+    <p class="subtitle">Orçamentos automotivos rápidos e profissionais</p>
+  </header>
+
+  <main class="container">
+    <!-- FORMULÁRIO PRINCIPAL -->
+    <section class="card">
+      <h2>Dados do Cliente e Serviço</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="cliente">Nome do Cliente</label>
+          <input type="text" id="cliente" placeholder="Ex: João da Silva" />
+        </div>
+        <div class="form-group">
+          <label for="descricao">Descrição do Serviço</label>
+          <textarea id="descricao" rows="2" placeholder="Ex: Revisão geral, troca de óleo, diagnóstico elétrico..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="maoDeObra">Valor da Mão de Obra (R$)</label>
+          <input type="number" id="maoDeObra" min="0" step="0.01" placeholder="Ex: 250.00" />
+        </div>
+      </div>
+      <p id="erroPrincipal" class="error-msg"></p>
+    </section>
+
+    <!-- PEÇAS -->
+    <section class="card">
+      <h2>Peças Utilizadas</h2>
+
+      <div class="parts-grid">
+        <div class="form-group">
+          <label for="nomePeca">Nome da peça</label>
+          <input type="text" id="nomePeca" placeholder="Ex: Filtro de óleo" />
+        </div>
+        <div class="form-group">
+          <label for="qtdPeca">Quantidade</label>
+          <input type="number" id="qtdPeca" min="1" step="1" placeholder="Ex: 1" />
+        </div>
+        <div class="form-group">
+          <label for="valorPeca">Valor unitário (R$)</label>
+          <input type="number" id="valorPeca" min="0" step="0.01" placeholder="Ex: 45.90" />
+        </div>
+      </div>
+
+      <button id="btnAdicionarPeca" class="btn secondary">Adicionar peça</button>
+      <p id="erroPeca" class="error-msg"></p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Peça</th>
+              <th>Qtd</th>
+              <th>Unitário (R$)</th>
+              <th>Total (R$)</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaPecas">
+            <!-- Linhas inseridas via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="totals-row">
+        <span>Total de peças:</span>
+        <strong id="totalPecas">R$ 0,00</strong>
+      </div>
+    </section>
+
+    <!-- AÇÕES -->
+    <section class="card actions-card">
+      <h2>Ações</h2>
+      <div class="actions">
+        <button id="btnGerar" class="btn primary">Gerar Orçamento</button>
+        <button id="btnSalvar" class="btn success">Salvar Orçamento</button>
+        <button id="btnLimpar" class="btn danger">Limpar Tudo</button>
+      </div>
+      <p id="mensagemAcao" class="info-msg"></p>
+    </section>
+
+    <!-- ORÇAMENTO GERADO -->
+    <section class="card" id="cardOrcamento" hidden>
+      <h2>Orçamento Gerado</h2>
+      <div class="orcamento-header">
+        <div>
+          <p><strong>Cliente:</strong> <span id="orcCliente"></span></p>
+          <p><strong>Serviço:</strong> <span id="orcDescricao"></span></p>
+        </div>
+        <div>
+          <p><strong>Data:</strong> <span id="orcData"></span></p>
+        </div>
+      </div>
+
+      <h3>Peças</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Peça</th>
+              <th>Qtd</</th>
+              <th>Unitário (R$)</th>
+              <th>Total (R$)</th>
+            </tr>
+          </thead>
+          <tbody id="orcPecas">
+            <!-- Preenchido via JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="orcamento-totals">
+        <p><strong>Total peças:</strong> <span id="orcTotalPecas"></span></p>
+        <p><strong>Mão de obra:</strong> <span id="orcMaoDeObra"></span></p>
+        <p class="grand-total"><strong>Total geral:</strong> <span id="orcTotalGeral"></span></p>
+      </div>
+    </section>
+
+    <!-- AVISO DE ÚLTIMO ORÇAMENTO -->
+    <section class="card" id="cardUltimoOrcamento" hidden>
+      <h2>Último orçamento salvo</h2>
+      <p>Encontramos um orçamento salvo anteriormente.</p>
+      <button id="btnCarregarUltimo" class="btn secondary">Carregar orçamento salvo</button>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>MecPrice • desenvolvido para oficinas e autoelétricas que querem orçar com profissionalismo.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
