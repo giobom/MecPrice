@@ -721,8 +721,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ====== ESTOQUE (localStorage) ======
-const ESTOQUE_KEY = "mecprice_estoque";
-let estoque = [];
 
 function uid() {
   return crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2);
