@@ -1,4 +1,9 @@
 /* ==============================
+   MecPrice - Script principal
+   Orçamento + Estoque (em abas)
+============================== */
+
+/* ==============================
    Helpers
 ============================== */
 function formatBRL(valor) {
@@ -24,14 +29,24 @@ function normalize(s) {
 }
 
 /* ==============================
-   Estado (Orçamento)
+   Estado
 ============================== */
 let pecas = [];
+
+/* ====== ESTOQUE (localStorage) ====== */
+const ESTOQUE_KEY = "mecprice_estoque";
+let estoque = [];
 
 /* ==============================
    Seletores principais (Orçamento)
 ============================== */
 const clienteInput = document.getElementById("cliente");
+const telefoneInput = document.getElementById("telefone");
+const cpfCnpjInput = document.getElementById("cpfCnpj");
+const placaInput = document.getElementById("placa");
+const modeloInput = document.getElementById("modelo");
+const anoInput = document.getElementById("ano");
+const kmInput = document.getElementById("km");
 const descricaoInput = document.getElementById("descricao");
 const maoDeObraInput = document.getElementById("maoDeObra");
 
@@ -66,8 +81,9 @@ const nomePecaInput = document.getElementById("nomePeca");
 const qtdPecaInput = document.getElementById("qtdPeca");
 const valorPecaInput = document.getElementById("valorPeca");
 
-
-/* Seletores (Estoque) - só se existirem no HTML */
+/* ==============================
+   Seletores (Estoque)
+============================== */
 const estNome = document.getElementById("estNome");
 const estSku = document.getElementById("estSku");
 const estCat = document.getElementById("estCat");
@@ -89,6 +105,28 @@ const dlSugestoes = document.getElementById("estoqueSugestoes");
    Persistência (Orçamento)
 ============================== */
 const ORCAMENTO_KEY = "ultimoOrcamentoOficina";
+
+/* ==============================
+   Abas
+============================== */
+function setupTabs() {
+  const buttons = Array.from(document.querySelectorAll(".tab-btn"));
+  const contents = Array.from(document.querySelectorAll(".tab-content"));
+  if (!buttons.length || !contents.length) return;
+
+  function show(tabId) {
+    contents.forEach((c) => (c.hidden = c.id !== tabId));
+    buttons.forEach((b) => b.classList.toggle("active", b.dataset.tab === tabId));
+  }
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => show(btn.dataset.tab));
+  });
+
+  // garante estado inicial
+  const initial = buttons.find((b) => b.classList.contains("active"))?.dataset.tab || contents[0].id;
+  show(initial);
+}
 
 /* ==============================
    Funções - Estoque
@@ -200,7 +238,10 @@ function upsertEstoque() {
   // Atualiza se bater SKU (preferência) ou nome+categoria
   const idx = estoque.findIndex((i) => {
     if (sku && i.sku) return normalize(i.sku) === normalize(sku);
-    return normalize(i.nome) === normalize(nome) && normalize(i.categoria) === normalize(item.categoria);
+    return (
+      normalize(i.nome) === normalize(nome) &&
+      normalize(i.categoria) === normalize(item.categoria)
+    );
   });
 
   if (idx >= 0) {
@@ -329,7 +370,7 @@ function baixarEstoque(nomeDigitado, qtdUsada) {
   if (qtd <= 0) return null;
 
   if (toNumber(it.qtd, 0) < qtd) {
-    erroPeca.textContent = `Estoque insuficiente. Disponível: ${toNumber(it.qtd, 0)}`;
+    if (erroPeca) erroPeca.textContent = `Estoque insuficiente. Disponível: ${toNumber(it.qtd, 0)}`;
     return null;
   }
 
@@ -358,15 +399,15 @@ function devolverEstoque(estoqueId, qtdDevolvida) {
    Funções - Orçamento (Peças)
 ============================== */
 function adicionarPeca() {
-  erroPeca.textContent = "";
-  mensagemAcao.textContent = "";
+  if (erroPeca) erroPeca.textContent = "";
+  if (mensagemAcao) mensagemAcao.textContent = "";
 
   const nome = (nomePecaInput?.value || "").trim();
   const qtd = parseInt(qtdPecaInput?.value || "", 10);
   const valor = parseFloat(valorPecaInput?.value || "");
 
   if (!nome || Number.isNaN(qtd) || qtd <= 0 || Number.isNaN(valor) || valor < 0) {
-    erroPeca.textContent = "Preencha nome, quantidade e valor unitário corretamente.";
+    if (erroPeca) erroPeca.textContent = "Preencha nome, quantidade e valor unitário corretamente.";
     return;
   }
 
@@ -532,6 +573,12 @@ function salvarOrcamento() {
 
 function limparTudo() {
   if (clienteInput) clienteInput.value = "";
+  if (telefoneInput) telefoneInput.value = "";
+  if (cpfCnpjInput) cpfCnpjInput.value = "";
+  if (placaInput) placaInput.value = "";
+  if (modeloInput) modeloInput.value = "";
+  if (anoInput) anoInput.value = "";
+  if (kmInput) kmInput.value = "";
   if (descricaoInput) descricaoInput.value = "";
   if (maoDeObraInput) maoDeObraInput.value = "";
 
@@ -563,7 +610,8 @@ function carregarUltimoOrcamento() {
   pecas = Array.isArray(orc.pecas) ? orc.pecas : [];
   atualizarTabelaPecas();
 
-  if (mensagemAcao) mensagemAcao.textContent = "Último orçamento carregado. Você pode editar e gerar novamente.";
+  if (mensagemAcao) mensagemAcao.textContent =
+    "Último orçamento carregado. Você pode editar e gerar novamente.";
   if (cardUltimoOrcamento) cardUltimoOrcamento.hidden = true;
 }
 
@@ -657,9 +705,11 @@ function registrarServiceWorker() {
 }
 
 /* ==============================
-   Init (apenas 1 DOMContentLoaded)
+   Init
 ============================== */
 document.addEventListener("DOMContentLoaded", () => {
+  setupTabs();
+
   // Orçamento - listeners
   btnAdicionarPeca?.addEventListener("click", adicionarPeca);
   btnGerar?.addEventListener("click", gerarOrcamento);
@@ -672,7 +722,7 @@ document.addEventListener("DOMContentLoaded", () => {
   verificarUltimoOrcamento();
   atualizarTabelaPecas();
 
-  // Estoque - carregar e render (se a seção existir)
+  // Estoque - carregar e render
   carregarEstoque();
   renderEstoque();
   atualizarSugestoesEstoque();
@@ -681,7 +731,7 @@ document.addEventListener("DOMContentLoaded", () => {
   nomePecaInput?.addEventListener("input", tentarAutoPreencherPreco);
   nomePecaInput?.addEventListener("change", tentarAutoPreencherPreco);
 
-  // Estoque - listeners (se existirem)
+  // Estoque - listeners
   btnAddItem?.addEventListener("click", upsertEstoque);
   btnExportEstoque?.addEventListener("click", exportarEstoqueJSON);
   importEstoque?.addEventListener("change", (e) => {
@@ -689,7 +739,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (file) importarEstoqueJSON(file);
   });
 
-  // Estoque - ações por tabela
+  // Estoque - ações por tabela (delegation)
   tbodyEstoque?.addEventListener("click", (e) => {
     const btn = e.target.closest("button");
     if (!btn) return;
@@ -706,193 +756,4 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   registrarServiceWorker();
-});
-
-
-// Clique no botão
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("btnPDF");
-  if (btn) btn.addEventListener("click", gerarPDFOrcamento);
-});
-
-// ====== ESTOQUE (localStorage) ======
-  const ESTOQUE_KEY = "mecprice_estoque";
-  let estoque = [];
-
-function uid() {
-  return crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2);
-}
-
-function carregarEstoque() {
-  try {
-    estoque = JSON.parse(localStorage.getItem(ESTOQUE_KEY) || "[]");
-  } catch {
-    estoque = [];
-  }
-}
-
-function salvarEstoque() {
-  localStorage.setItem(ESTOQUE_KEY, JSON.stringify(estoque));
-}
-
-function renderEstoque() {
-  const tbody = document.getElementById("tbodyEstoque");
-  if (!tbody) return;
-
-  tbody.innerHTML = "";
-  const msg = document.getElementById("msgEstoque");
-
-  estoque
-    .sort((a, b) => a.nome.localeCompare(b.nome))
-    .forEach((it) => {
-      const baixo = Number(it.qtd) <= Number(it.minimo || 0);
-
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${it.nome}</td>
-        <td>${it.sku || ""}</td>
-        <td>${it.categoria || ""}</td>
-        <td>${it.qtd}</td>
-        <td>${formatBRL(it.preco)}</td>
-        <td>${it.minimo ?? 0}</td>
-        <td>
-          <button class="btn secondary" data-edit="${it.id}">Editar</button>
-          <button class="btn" data-in="${it.id}">+ Entrada</button>
-          <button class="btn" data-out="${it.id}">- Saída</button>
-          <button class="btn danger" data-del="${it.id}">Remover</button>
-        </td>
-      `;
-
-      if (baixo) tr.style.opacity = "0.95"; // opcional: destaque via CSS depois
-      tbody.appendChild(tr);
-    });
-
-  const qtdBaixa = estoque.filter(i => Number(i.qtd) <= Number(i.minimo || 0)).length;
-  if (msg) msg.textContent = qtdBaixa ? `⚠️ ${qtdBaixa} item(ns) com estoque baixo.` : "Estoque OK ✅";
-}
-
-function upsertItemEstoque(item) {
-  // Se já existir por SKU (ou nome+categoria), atualiza
-  const idx = estoque.findIndex(i => (item.sku && i.sku === item.sku) || (i.nome === item.nome && i.categoria === item.categoria));
-  if (idx >= 0) {
-    estoque[idx] = { ...estoque[idx], ...item };
-  } else {
-    estoque.push({ id: uid(), ...item });
-  }
-  salvarEstoque();
-  renderEstoque();
-}
-
-function ajustarQtd(id, delta) {
-  const it = estoque.find(i => i.id === id);
-  if (!it) return;
-  it.qtd = Math.max(0, Number(it.qtd || 0) + Number(delta || 0));
-  salvarEstoque();
-  renderEstoque();
-}
-
-function removerItem(id) {
-  estoque = estoque.filter(i => i.id !== id);
-  salvarEstoque();
-  renderEstoque();
-}
-
-function preencherFormulario(id) {
-  const it = estoque.find(i => i.id === id);
-  if (!it) return;
-  document.getElementById("estNome").value = it.nome || "";
-  document.getElementById("estSku").value = it.sku || "";
-  document.getElementById("estCat").value = it.categoria || "";
-  document.getElementById("estCusto").value = it.custo ?? 0;
-  document.getElementById("estPreco").value = it.preco ?? 0;
-  document.getElementById("estQtd").value = it.qtd ?? 0;
-  document.getElementById("estMin").value = it.minimo ?? 0;
-}
-
-function limparFormEstoque() {
-  ["estNome","estSku","estCat","estCusto","estPreco","estQtd","estMin"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = "";
-  });
-}
-
-function exportarEstoque() {
-  const blob = new Blob([JSON.stringify(estoque, null, 2)], { type: "application/json" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "mecprice_estoque.json";
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
-function importarEstoque(file) {
-  const reader = new FileReader();
-  reader.onload = () => {
-    try {
-      const data = JSON.parse(reader.result);
-      if (Array.isArray(data)) {
-        // mantém ids, mas garante campos
-        estoque = data.map(i => ({
-          id: i.id || uid(),
-          nome: i.nome || "",
-          sku: i.sku || "",
-          categoria: i.categoria || "",
-          custo: Number(i.custo || 0),
-          preco: Number(i.preco || 0),
-          qtd: Number(i.qtd || 0),
-          minimo: Number(i.minimo || 0),
-        }));
-        salvarEstoque();
-        renderEstoque();
-      }
-    } catch (e) {
-      alert("JSON inválido para estoque.");
-    }
-  };
-  reader.readAsText(file);
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  carregarEstoque();
-  renderEstoque();
-
-  document.getElementById("btnAddItem")?.addEventListener("click", () => {
-    const nome = document.getElementById("estNome").value.trim();
-    const sku = document.getElementById("estSku").value.trim();
-    if (!nome) return alert("Informe o nome da peça.");
-
-    upsertItemEstoque({
-      nome,
-      sku,
-      categoria: document.getElementById("estCat").value.trim(),
-      custo: Number(document.getElementById("estCusto").value || 0),
-      preco: Number(document.getElementById("estPreco").value || 0),
-      qtd: Number(document.getElementById("estQtd").value || 0),
-      minimo: Number(document.getElementById("estMin").value || 0),
-    });
-
-    limparFormEstoque();
-  });
-
-  document.getElementById("btnExportEstoque")?.addEventListener("click", exportarEstoque);
-
-  document.getElementById("importEstoque")?.addEventListener("change", (e) => {
-    const file = e.target.files?.[0];
-    if (file) importarEstoque(file);
-  });
-
-  document.getElementById("tbodyEstoque")?.addEventListener("click", (e) => {
-    const btn = e.target.closest("button");
-    if (!btn) return;
-
-    const idEdit = btn.getAttribute("data-edit");
-    const idIn = btn.getAttribute("data-in");
-    const idOut = btn.getAttribute("data-out");
-    const idDel = btn.getAttribute("data-del");
-
-    if (idEdit) return preencherFormulario(idEdit);
-    if (idIn) return ajustarQtd(idIn, +1);
-    if (idOut) return ajustarQtd(idOut, -1);
-    if (idDel) return removerItem(idDel);
-  });
 });
