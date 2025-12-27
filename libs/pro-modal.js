@@ -1,61 +1,72 @@
 (() => {
     "use strict";
 
-    // evita rodar setup 2x (problema clássico quando app.js duplica/cache)
-    if (window.__MECPRICE_PRO_INIT__) return;
-    window.__MECPRICE_PRO_INIT__ = true;
+    const { setPlan } = window.MecPrice.core;
 
     function setupProModal() {
-        const modal = document.getElementById("proModal");
         const btnOpen = document.getElementById("btnOpenPro");
+        const modal = document.getElementById("proModal");
         const btnClose = document.getElementById("btnClosePro");
         const msg = document.getElementById("proMsg");
 
-        if (!modal) return;
+        if (!modal) {
+            console.warn("[PRO] proModal não encontrado");
+            return;
+        }
 
         function open() {
             modal.hidden = false;
-            modal.style.display = "grid";
+            modal.style.display = "grid";   // ✅ força exibir mesmo com CSS
             if (msg) msg.textContent = "";
+            // debug:
+            // console.log("[PRO] aberto");
         }
 
         function close() {
             modal.hidden = true;
-            modal.style.display = "none";
+            modal.style.display = "none";   // ✅ força esconder mesmo com CSS/cache
+            // debug:
+            // console.log("[PRO] fechado");
         }
 
-        // expõe para o onclick do HTML
-        window.MecPrice = window.MecPrice || {};
-        window.MecPrice.pro = { open, close, setupProModal };
-
-        // garante estado inicial
-        if (modal.hidden) modal.style.display = "none";
-
-        // abrir
+        // Abrir
         btnOpen?.addEventListener("click", open);
 
-        // fechar (direto no botão)
+        // ✅ Fechar direto no botão (mais confiável)
         btnClose?.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
             close();
         });
 
-        // fechar clicando fora (no fundo escuro)
+        // ✅ Fechar por delegation (caso o botão mude / clique em filho)
         modal.addEventListener("click", (e) => {
-            if (e.target === modal) close();
-            const closeEl = e.target.closest("[data-close-pro]");
-            if (closeEl) close();
+            // clicou no fundo (overlay)
+            if (e.target === modal) return close();
+
+            const closeEl = e.target.closest("#btnClosePro, [data-close-pro]");
+            if (closeEl) return close();
         });
 
         // ESC fecha
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape" && !modal.hidden) close();
         });
+
+        // Placeholders
+        document.getElementById("btnProLogin")?.addEventListener("click", () => {
+            if (msg) msg.textContent = "Login PRO ainda não implementado.";
+        });
+
+        document.getElementById("btnProAssinar")?.addEventListener("click", () => {
+            if (msg) msg.textContent = "Assinatura PRO ainda não implementada.";
+        });
+
+        setPlan("free");
+
+        // ✅ garante estado inicial fechado visualmente
+        if (modal.hidden) modal.style.display = "none";
     }
 
-    // compatível com seu app.js atual
-    window.MecPrice = window.MecPrice || {};
-    window.MecPrice.pro = window.MecPrice.pro || {};
-    window.MecPrice.pro.setupProModal = setupProModal;
+    window.MecPrice.pro = { setupProModal };
 })();
