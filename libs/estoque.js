@@ -11,18 +11,6 @@
         const data = getJSON(ESTOQUE_KEY, []);
         estoque = Array.isArray(data) ? data : [];
     }
-    function preencherFormularioEstoque(id) {
-        const it = estoque.find((x) => x.id === id);
-        if (!it || !DOM.estNome) return;
-
-        DOM.estNome.value = it.nome || "";
-        if (DOM.estSku) DOM.estSku.value = it.sku || "";
-        if (DOM.estCat) DOM.estCat.value = it.categoria || "";
-        if (DOM.estCusto) DOM.estCusto.value = toNumber(it.custo, 0);
-        if (DOM.estPreco) DOM.estPreco.value = toNumber(it.preco, 0);
-        if (DOM.estQtd) DOM.estQtd.value = toNumber(it.qtd, 0);
-        if (DOM.estMin) DOM.estMin.value = toNumber(it.minimo, 0);
-    }
 
     function salvarEstoque() {
         setJSON(ESTOQUE_KEY, estoque);
