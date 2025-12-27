@@ -2,347 +2,348 @@
 <html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>MecPrice - Orçamentos Automotivos</title>
-  <meta name="description"
-    content="MecPrice: gere orçamentos automotivos rápido, com controle de peças e estoque. PDF e PWA instalável." />
+    <title>MecPrice - Orçamentos Automotivos</title>
+    <meta name="description"
+        content="MecPrice: gere orçamentos automotivos rápido, com controle de peças e estoque. PDF e PWA instalável." />
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z51NZDH621"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-Z51NZDH621');
-  </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z51NZDH621"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-Z51NZDH621');
+    </script>
 
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#facc15" />
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png" />
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#facc15" />
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png" />
 
-  <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <!-- TOPBAR / HEADER -->
-  <header class="topbar">
-    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
-      <div>
-        <h1 style="margin:0;">MecPrice</h1>
-        <p class="subtitle" style="margin:0.25rem 0 0;">Orçamento + Estoque (PWA)</p>
-      </div>
+    <!-- TOPBAR / HEADER -->
+    <header class="topbar">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+            <div>
+                <h1 style="margin:0;">MecPrice</h1>
+                <p class="subtitle" style="margin:0.25rem 0 0;">Orçamento + Estoque (PWA)</p>
+            </div>
 
-      <!-- Área PRO (UI) -->
-      <div style="display:flex; align-items:center; gap:10px;">
-        <span id="planBadge" class="badge"
-          style="font-weight:700; padding:0.35rem 0.6rem; border-radius:999px; background:rgba(250,204,21,0.25); border:1px solid rgba(250,204,21,0.65);"
-          title="Plano atual">FREE</span>
+            <!-- Área PRO (UI) -->
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span id="planBadge" class="badge"
+                    style="font-weight:700; padding:0.35rem 0.6rem; border-radius:999px; background:rgba(250,204,21,0.25); border:1px solid rgba(250,204,21,0.65);"
+                    title="Plano atual">FREE</span>
 
-  </header>
+                <button id="btnOpenPro" class="btn secondary" type="button" aria-haspopup="dialog"
+                    aria-controls="proModal">
+                    Área PRO
+                </button>
+            </div>
+        </div>
+    </header>
 
-  <main class="container">
-    <!-- ABAS -->
-    <nav class="tabs" aria-label="Navegação">
-      <button class="tab-btn active" type="button" data-tab="tab-orcamento">Orçamento</button>
-      <button class="tab-btn" type="button" data-tab="tab-estoque">Estoque</button>
-    </nav>
+    <main class="container">
+        <!-- ABAS -->
+        <nav class="tabs" aria-label="Navegação">
+            <button class="tab-btn active" type="button" data-tab="tab-orcamento">Orçamento</button>
+            <button class="tab-btn" type="button" data-tab="tab-estoque">Estoque</button>
+        </nav>
 
-    <!-- =========================
+        <!-- =========================
          ABA: ORÇAMENTO
     ========================== -->
-    <div id="tab-orcamento" class="tab-content">
-      <section class="card">
-        <h2>Dados do Cliente e Serviço</h2>
+        <div id="tab-orcamento" class="tab-content">
+            <section class="card">
+                <h2>Dados do Cliente e Serviço</h2>
 
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="cliente">Nome do Cliente</label>
-            <input type="text" id="cliente" placeholder="Ex: João da Silva" />
-          </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="cliente">Nome do Cliente</label>
+                        <input type="text" id="cliente" placeholder="Ex: João da Silva" />
+                    </div>
 
-          <div class="form-group">
-            <label for="telefone">Telefone / WhatsApp</label>
-            <input type="text" id="telefone" placeholder="Ex: (31) 99999-9999" />
-          </div>
+                    <div class="form-group">
+                        <label for="telefone">Telefone / WhatsApp</label>
+                        <input type="text" id="telefone" placeholder="Ex: (31) 99999-9999" />
+                    </div>
 
-          <div class="form-group">
-            <label for="cpfCnpj">CPF/CNPJ (opcional)</label>
-            <input type="text" id="cpfCnpj" placeholder="Ex: 123.456.789-00" />
-          </div>
+                    <div class="form-group">
+                        <label for="cpfCnpj">CPF/CNPJ (opcional)</label>
+                        <input type="text" id="cpfCnpj" placeholder="Ex: 123.456.789-00" />
+                    </div>
 
-          <div class="form-group">
-            <label for="placa">Placa</label>
-            <input type="text" id="placa" placeholder="Ex: ABC1D23" />
-          </div>
+                    <div class="form-group">
+                        <label for="placa">Placa</label>
+                        <input type="text" id="placa" placeholder="Ex: ABC1D23" />
+                    </div>
 
-          <div class="form-group">
-            <label for="modelo">Modelo</label>
-            <input type="text" id="modelo" placeholder="Ex: Gol 1.6 / Onix / Corolla" />
-          </div>
+                    <div class="form-group">
+                        <label for="modelo">Modelo</label>
+                        <input type="text" id="modelo" placeholder="Ex: Gol 1.6 / Onix / Corolla" />
+                    </div>
 
-          <div class="form-group">
-            <label for="ano">Ano</label>
-            <input type="number" id="ano" min="1900" max="2100" placeholder="Ex: 2016" />
-          </div>
+                    <div class="form-group">
+                        <label for="ano">Ano</label>
+                        <input type="number" id="ano" min="1900" max="2100" placeholder="Ex: 2016" />
+                    </div>
 
-          <div class="form-group">
-            <label for="km">KM</label>
-            <input type="number" id="km" min="0" step="1" placeholder="Ex: 125000" />
-          </div>
+                    <div class="form-group">
+                        <label for="km">KM</label>
+                        <input type="number" id="km" min="0" step="1" placeholder="Ex: 125000" />
+                    </div>
 
-          <div class="form-group" style="grid-column:1 / -1;">
-            <label for="descricao">Descrição do Serviço</label>
-            <textarea id="descricao" rows="2" placeholder="Ex: Revisão geral, troca de óleo..."></textarea>
-          </div>
+                    <div class="form-group" style="grid-column:1 / -1;">
+                        <label for="descricao">Descrição do Serviço</label>
+                        <textarea id="descricao" rows="2" placeholder="Ex: Revisão geral, troca de óleo..."></textarea>
+                    </div>
 
-          <div class="form-group">
-            <label for="maoDeObra">Valor da Mão de Obra (R$)</label>
-            <input type="number" id="maoDeObra" min="0" step="0.01" placeholder="Ex: 250.00" />
-          </div>
+                    <div class="form-group">
+                        <label for="maoDeObra">Valor da Mão de Obra (R$)</label>
+                        <input type="number" id="maoDeObra" min="0" step="0.01" placeholder="Ex: 250.00" />
+                    </div>
+                </div>
+
+                <p id="erroPrincipal" class="error-msg"></p>
+            </section>
+
+            <section class="card">
+                <h2>Peças Utilizadas</h2>
+
+                <datalist id="estoqueSugestoes"></datalist>
+
+                <div class="parts-grid">
+                    <div class="form-group">
+                        <label for="nomePeca">Nome da peça</label>
+                        <input type="text" id="nomePeca" list="estoqueSugestoes" placeholder="Ex: Filtro de óleo" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="qtdPeca">Quantidade</label>
+                        <input type="number" id="qtdPeca" min="1" step="1" placeholder="Ex: 1" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="valorPeca">Valor unitário (R$)</label>
+                        <input type="number" id="valorPeca" min="0" step="0.01" placeholder="Ex: 45.90" />
+                    </div>
+                </div>
+
+                <button id="btnAdicionarPeca" class="btn secondary" type="button">Adicionar peça</button>
+                <p id="erroPeca" class="error-msg"></p>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Peça</th>
+                                <th>Qtd</th>
+                                <th>Unitário</th>
+                                <th>Total</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaPecas"></tbody>
+                    </table>
+                </div>
+
+                <div class="totals-row">
+                    <span>Total de peças:</span>
+                    <strong id="totalPecas">R$ 0,00</strong>
+                </div>
+            </section>
+
+            <section class="card actions-card">
+                <h2>Ações</h2>
+                <div class="actions">
+                    <button id="btnGerar" class="btn primary" type="button">Gerar Orçamento</button>
+                    <button id="btnSalvar" class="btn success" type="button">Salvar Orçamento</button>
+                    <button id="btnLimpar" class="btn danger" type="button">Limpar Tudo</button>
+                </div>
+                <p id="mensagemAcao" class="info-msg"></p>
+            </section>
+
+            <section class="card" id="cardOrcamento" hidden>
+                <h2>Orçamento Gerado</h2>
+
+                <div class="orcamento-header">
+                    <div>
+                        <p><strong>Cliente:</strong> <span id="orcCliente"></span></p>
+                        <p><strong>Serviço:</strong> <span id="orcDescricao"></span></p>
+                    </div>
+                    <div>
+                        <p><strong>Data:</strong> <span id="orcData"></span></p>
+                    </div>
+                </div>
+
+                <h3>Peças</h3>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Peça</th>
+                                <th>Qtd</th>
+                                <th>Unitário</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orcPecas"></tbody>
+                    </table>
+                </div>
+
+                <div class="orcamento-totals">
+                    <p><strong>Total peças:</strong> <span id="orcTotalPecas"></span></p>
+                    <p><strong>Mão de obra:</strong> <span id="orcMaoDeObra"></span></p>
+                    <p class="grand-total"><strong>Total geral:</strong> <span id="orcTotalGeral"></span></p>
+                </div>
+
+                <div class="actions" style="margin-top: 0.75rem;">
+                    <button id="btnPDF" class="btn secondary" type="button">Baixar PDF</button>
+                </div>
+            </section>
+
+            <section class="card" id="cardUltimoOrcamento" hidden>
+                <h2>Último orçamento salvo</h2>
+                <p>Encontramos um orçamento salvo anteriormente.</p>
+                <button id="btnCarregarUltimo" class="btn secondary" type="button">Carregar orçamento salvo</button>
+            </section>
         </div>
 
-        <p id="erroPrincipal" class="error-msg"></p>
-      </section>
-
-      <section class="card">
-        <h2>Peças Utilizadas</h2>
-
-        <datalist id="estoqueSugestoes"></datalist>
-
-        <div class="parts-grid">
-          <div class="form-group">
-            <label for="nomePeca">Nome da peça</label>
-            <input type="text" id="nomePeca" list="estoqueSugestoes" placeholder="Ex: Filtro de óleo" />
-          </div>
-
-          <div class="form-group">
-            <label for="qtdPeca">Quantidade</label>
-            <input type="number" id="qtdPeca" min="1" step="1" placeholder="Ex: 1" />
-          </div>
-
-          <div class="form-group">
-            <label for="valorPeca">Valor unitário (R$)</label>
-            <input type="number" id="valorPeca" min="0" step="0.01" placeholder="Ex: 45.90" />
-          </div>
-        </div>
-
-        <button id="btnAdicionarPeca" class="btn secondary" type="button">Adicionar peça</button>
-        <p id="erroPeca" class="error-msg"></p>
-
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Peça</th>
-                <th>Qtd</th>
-                <th>Unitário</th>
-                <th>Total</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="tabelaPecas"></tbody>
-          </table>
-        </div>
-
-        <div class="totals-row">
-          <span>Total de peças:</span>
-          <strong id="totalPecas">R$ 0,00</strong>
-        </div>
-      </section>
-
-      <section class="card actions-card">
-        <h2>Ações</h2>
-        <div class="actions">
-          <button id="btnGerar" class="btn primary" type="button">Gerar Orçamento</button>
-          <button id="btnSalvar" class="btn success" type="button">Salvar Orçamento</button>
-          <button id="btnLimpar" class="btn danger" type="button">Limpar Tudo</button>
-        </div>
-        <p id="mensagemAcao" class="info-msg"></p>
-      </section>
-
-      <section class="card" id="cardOrcamento" hidden>
-        <h2>Orçamento Gerado</h2>
-
-        <div class="orcamento-header">
-          <div>
-            <p><strong>Cliente:</strong> <span id="orcCliente"></span></p>
-            <p><strong>Serviço:</strong> <span id="orcDescricao"></span></p>
-          </div>
-          <div>
-            <p><strong>Data:</strong> <span id="orcData"></span></p>
-          </div>
-        </div>
-
-        <h3>Peças</h3>
-
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>Peça</th>
-                <th>Qtd</th>
-                <th>Unitário</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody id="orcPecas"></tbody>
-          </table>
-        </div>
-
-        <div class="orcamento-totals">
-          <p><strong>Total peças:</strong> <span id="orcTotalPecas"></span></p>
-          <p><strong>Mão de obra:</strong> <span id="orcMaoDeObra"></span></p>
-          <p class="grand-total"><strong>Total geral:</strong> <span id="orcTotalGeral"></span></p>
-        </div>
-
-        <div class="actions" style="margin-top: 0.75rem;">
-          <button id="btnPDF" class="btn secondary" type="button">Baixar PDF</button>
-        </div>
-      </section>
-
-      <section class="card" id="cardUltimoOrcamento" hidden>
-        <h2>Último orçamento salvo</h2>
-        <p>Encontramos um orçamento salvo anteriormente.</p>
-        <button id="btnCarregarUltimo" class="btn secondary" type="button">Carregar orçamento salvo</button>
-      </section>
-    </div>
-
-    <!-- =========================
+        <!-- =========================
          ABA: ESTOQUE
     ========================== -->
-    <div id="tab-estoque" class="tab-content" hidden>
-      <section class="card">
-        <h2>Controle de Estoque</h2>
+        <div id="tab-estoque" class="tab-content" hidden>
+            <section class="card">
+                <h2>Controle de Estoque</h2>
 
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="estNome">Peça</label>
-            <input id="estNome" type="text" placeholder="Ex: Filtro de óleo" />
-          </div>
-          <div class="form-group">
-            <label for="estSku">SKU/Código</label>
-            <input id="estSku" type="text" placeholder="Ex: FO-123" />
-          </div>
-          <div class="form-group">
-            <label for="estCat">Categoria</label>
-            <input id="estCat" type="text" placeholder="Ex: Filtros" />
-          </div>
-          <div class="form-group">
-            <label for="estCusto">Custo (R$)</label>
-            <input id="estCusto" type="number" step="0.01" min="0" placeholder="Ex: 25.00" />
-          </div>
-          <div class="form-group">
-            <label for="estPreco">Preço (R$)</label>
-            <input id="estPreco" type="number" step="0.01" min="0" placeholder="Ex: 45.90" />
-          </div>
-          <div class="form-group">
-            <label for="estQtd">Qtd</label>
-            <input id="estQtd" type="number" step="1" min="0" placeholder="Ex: 10" />
-          </div>
-          <div class="form-group">
-            <label for="estMin">Estoque mínimo</label>
-            <input id="estMin" type="number" step="1" min="0" placeholder="Ex: 2" />
-          </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="estNome">Peça</label>
+                        <input id="estNome" type="text" placeholder="Ex: Filtro de óleo" />
+                    </div>
+                    <div class="form-group">
+                        <label for="estSku">SKU/Código</label>
+                        <input id="estSku" type="text" placeholder="Ex: FO-123" />
+                    </div>
+                    <div class="form-group">
+                        <label for="estCat">Categoria</label>
+                        <input id="estCat" type="text" placeholder="Ex: Filtros" />
+                    </div>
+                    <div class="form-group">
+                        <label for="estCusto">Custo (R$)</label>
+                        <input id="estCusto" type="number" step="0.01" min="0" placeholder="Ex: 25.00" />
+                    </div>
+                    <div class="form-group">
+                        <label for="estPreco">Preço (R$)</label>
+                        <input id="estPreco" type="number" step="0.01" min="0" placeholder="Ex: 45.90" />
+                    </div>
+                    <div class="form-group">
+                        <label for="estQtd">Qtd</label>
+                        <input id="estQtd" type="number" step="1" min="0" placeholder="Ex: 10" />
+                    </div>
+                    <div class="form-group">
+                        <label for="estMin">Estoque mínimo</label>
+                        <input id="estMin" type="number" step="1" min="0" placeholder="Ex: 2" />
+                    </div>
+                </div>
+
+                <div class="actions" style="margin-top: 0.75rem;">
+                    <button id="btnAddItem" class="btn primary" type="button">Adicionar/Atualizar</button>
+                    <button id="btnExportEstoque" class="btn secondary" type="button">Salvar Backup</button>
+                    <label class="btn secondary" style="cursor:pointer;">
+                        Restaurar Backup
+                        <input id="importEstoque" type="file" accept="application/json" style="display:none;" />
+                    </label>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Peça</th>
+                                <th>SKU</th>
+                                <th>Categoria</th>
+                                <th>Qtd</th>
+                                <th>Preço</th>
+                                <th>Mín</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyEstoque"></tbody>
+                    </table>
+                </div>
+
+                <p id="msgEstoque" class="info-msg"></p>
+            </section>
         </div>
+    </main>
 
-        <div class="actions" style="margin-top: 0.75rem;">
-          <button id="btnAddItem" class="btn primary" type="button">Adicionar/Atualizar</button>
-          <button id="btnExportEstoque" class="btn secondary" type="button">Salvar Backup</button>
-          <label class="btn secondary" style="cursor:pointer;">
-            Restaurar Backup
-            <input id="importEstoque" type="file" accept="application/json" style="display:none;" />
-          </label>
+    <footer class="footer">
+        <p>MecPrice • desenvolvido para oficinas e autoelétricas.</p>
+    </footer>
+
+    <!-- MODAL PRO -->
+    <div id="proModal" role="dialog" aria-modal="true" aria-labelledby="proTitle" hidden
+        style="position:fixed; inset:0; background:rgba(0,0,0,0.55); display:grid; place-items:center; padding:16px; z-index:9999;">
+        <div
+            style="width:100%; max-width:520px; background:#111827; color:#e5e7eb; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; box-shadow:0 20px 60px rgba(0,0,0,0.4);">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                <h2 id="proTitle" style="margin:0;">Área PRO</h2>
+
+                <!-- ✅ FECHAR com id + data-close-pro + type=button -->
+                <button id="btnClosePro" class="btn danger" type="button" data-close-pro>Fechar</button>
+            </div>
+
+            <p style="margin:0.75rem 0 0;">
+                Faça login para liberar recursos PRO (histórico, clientes, backup na nuvem, relatórios, etc.).
+            </p>
+
+            <div style="margin-top:12px; display:grid; gap:10px;">
+                <div class="form-group">
+                    <label for="proEmail">E-mail</label>
+                    <input id="proEmail" type="email" placeholder="seuemail@exemplo.com" />
+                </div>
+
+                <div class="form-group">
+                    <label for="proSenha">Senha</label>
+                    <input id="proSenha" type="password" placeholder="••••••••" />
+                </div>
+
+                <div class="actions" style="justify-content:flex-end;">
+                    <button id="btnProLogin" class="btn primary" type="button">Entrar</button>
+                    <button id="btnProAssinar" class="btn secondary" type="button">Assinar PRO</button>
+                </div>
+
+                <p id="proMsg" class="info-msg" style="margin:0;"></p>
+            </div>
         </div>
-
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>Peça</th>
-                <th>SKU</th>
-                <th>Categoria</th>
-                <th>Qtd</th>
-                <th>Preço</th>
-                <th>Mín</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="tbodyEstoque"></tbody>
-          </table>
-        </div>
-
-        <p id="msgEstoque" class="info-msg"></p>
-      </section>
     </div>
-  </main>
 
-  <footer class="footer">
-    <p>MecPrice • desenvolvido para oficinas e autoelétricas.</p>
-  </footer>
 
-  <!-- MODAL PRO -->
-  <div id="proModal" role="dialog" aria-modal="true" aria-labelledby="proTitle" hidden
-    style="position:fixed; inset:0; background:rgba(0,0,0,0.55); display:grid; place-items:center; padding:16px; z-index:9999;">
-    <div
-      style="width:100%; max-width:520px; background:#111827; color:#e5e7eb; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; box-shadow:0 20px 60px rgba(0,0,0,0.4);">
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
-        <h2 id="proTitle" style="margin:0;">Área PRO</h2>
+    <!-- jsPDF + AutoTable (APENAS 1 VEZ) -->
+    <script src="libs/jspdf.umd.min.js"></script>
+    <script src="libs/jspdf.plugin.autotable.min.js"></script>
 
-        <!-- ✅ FECHAR com id + data-close-pro + type=button -->
-        <button id="btnClosePro" class="btn danger" type="button" data-close-pro>Fechar</button>
-      </div>
+    <!-- MecPrice modules -->
+    <script src="libs/core.js"></script>
+    <script src="libs/dom.js"></script>
+    <script src="libs/storage.js"></script>
+    <script src="libs/tabs.js"></script>
+    <script src="libs/estoque.js"></script>
+    <script src="libs/orcamento.js"></script>
+    <script src="libs/pdf.js"></script>
+    <script src="libs/pro-modal.js"></script>
 
-      <p style="margin:0.75rem 0 0;">
-        Faça login para liberar recursos PRO (histórico, clientes, backup na nuvem, relatórios, etc.).
-      </p>
-
-      <div style="margin-top:12px; display:grid; gap:10px;">
-        <div class="form-group">
-          <label for="proEmail">E-mail</label>
-          <input id="proEmail" type="email" placeholder="seuemail@exemplo.com" />
-        </div>
-
-        <div class="form-group">
-          <label for="proSenha">Senha</label>
-          <input id="proSenha" type="password" placeholder="••••••••" />
-        </div>
-
-        <div class="actions" style="justify-content:flex-end;">
-          <button id="btnProLogin" class="btn primary" type="button">Entrar</button>
-          <button id="btnProAssinar" class="btn secondary" type="button">Assinar PRO</button>
-        </div>
-
-        <p id="proMsg" class="info-msg" style="margin:0;"></p>
-      </div>
-    </div>
-  </div>
-
-  <!-- jsPDF + AutoTable -->
-  <script src="libs/jspdf.umd.min.js"></script>
-  <script src="libs/jspdf.plugin.autotable.min.js"></script>
-
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="libs/supabase.js"></script>
-  <script src="libs/auth.js"></script>
-
-  <!-- MecPrice modules -->
-  <script src="libs/core.js"></script>
-  <script src="libs/dom.js"></script>
-  <script src="libs/storage.js"></script>
-  <script src="libs/tabs.js"></script>
-  <script src="libs/estoque.js"></script>
-  <script src="libs/orcamento.js"></script>
-  <script src="libs/pdf.js"></script>
-  <script src="libs/pro-modal.js"></script>
-
-  <!-- Boot -->
-  <script src="app.js"></script>
+    <!-- Boot -->
+    <script src="app.js"></script>
 </body>
 
 </html>
