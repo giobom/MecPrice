@@ -5,22 +5,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z51NZDH621"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    gtag('config', 'G-Z51NZDH621');
-  </script>
-
-
   <title>MecPrice - Orçamentos Automotivos</title>
   <meta name="description"
     content="MecPrice: gere orçamentos automotivos rápido, com controle de peças e estoque. PDF e PWA instalável." />
 
-  <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) - APENAS 1 VEZ -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z51NZDH621"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -308,7 +297,9 @@
       style="width:100%; max-width:520px; background:#111827; color:#e5e7eb; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; box-shadow:0 20px 60px rgba(0,0,0,0.4);">
       <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
         <h2 id="proTitle" style="margin:0;">Área PRO</h2>
-        <button id="btnClosePro" class="btn danger" type="button">Fechar</button>
+
+        <!-- ✅ FECHAR com id + data-close-pro + type=button -->
+        <button id="btnClosePro" class="btn danger" type="button" data-close-pro>Fechar</button>
       </div>
 
       <p style="margin:0.75rem 0 0;">
@@ -336,12 +327,11 @@
     </div>
   </div>
 
-  <!-- jsPDF + AutoTable -->
-  <script src="libs/jspdf.umd.min.js"></script>
-  <script src="libs/jspdf.plugin.autotable.min.js"></script>
+  <!-- =============================
+       SCRIPTS (SEM DUPLICAR)
+  ============================== -->
 
-  <!-- Script principal -->
-  <!-- jsPDF + AutoTable -->
+  <!-- jsPDF + AutoTable (APENAS 1 VEZ) -->
   <script src="libs/jspdf.umd.min.js"></script>
   <script src="libs/jspdf.plugin.autotable.min.js"></script>
 
@@ -357,7 +347,6 @@
 
   <!-- Boot -->
   <script src="app.js"></script>
-
 </body>
 
 </html>
