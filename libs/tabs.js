@@ -1,22 +1,20 @@
-(() => {
-    "use strict";
+(function (w) {
+    const { Dom } = w.MecPrice;
 
-    function setupTabs() {
-        const buttons = Array.from(document.querySelectorAll(".tab-btn"));
-        const contents = Array.from(document.querySelectorAll(".tab-content"));
-        if (!buttons.length || !contents.length) return;
+    function init() {
+        const root = Dom.$("[data-tabs]");
+        if (!root) return;
 
-        function show(tabId) {
-            contents.forEach((c) => (c.hidden = c.id !== tabId));
-            buttons.forEach((b) => b.classList.toggle("active", b.dataset.tab === tabId));
-        }
+        Dom.delegate(root, "click", "[data-tab]", (e, btn) => {
+            e.preventDefault();
+            const tab = btn.getAttribute("data-tab");
+            if (!tab) return;
 
-        buttons.forEach((btn) => btn.addEventListener("click", () => show(btn.dataset.tab)));
-
-        const initial =
-            buttons.find((b) => b.classList.contains("active"))?.dataset.tab || contents[0].id;
-        show(initial);
+            Dom.$$("[data-tab]", root).forEach(b => b.classList.toggle("active", b === btn));
+            Dom.$$("[data-pane]").forEach(p => p.classList.toggle("active", p.getAttribute("data-pane") === tab));
+        });
     }
 
-    window.MecPrice.tabs = { setupTabs };
-})();
+    w.MecPrice = w.MecPrice || {};
+    w.MecPrice.Tabs = { init };
+})(window);
