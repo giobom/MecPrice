@@ -1,8 +1,6 @@
 (() => {
     "use strict";
 
-    const { setPlan } = window.MecPrice.core;
-
     function setupProModal() {
         const btnOpen = document.getElementById("btnOpenPro");
         const modal = document.getElementById("proModal");
@@ -14,59 +12,67 @@
             return;
         }
 
+        const Auth = () => window.MecPrice?.auth;
+        const Core = () => window.MecPrice?.core;
+
         function open() {
             modal.hidden = false;
-            modal.style.display = "grid";   // ✅ força exibir mesmo com CSS
+            modal.style.display = "grid";
             if (msg) msg.textContent = "";
-            // debug:
-            // console.log("[PRO] aberto");
         }
 
         function close() {
             modal.hidden = true;
-            modal.style.display = "none";   // ✅ força esconder mesmo com CSS/cache
-            // debug:
-            // console.log("[PRO] fechado");
+            modal.style.display = "none";
         }
 
         // Abrir
         btnOpen?.addEventListener("click", open);
 
-        // ✅ Fechar direto no botão (mais confiável)
+        // Fechar botão
         btnClose?.addEventListener("click", (e) => {
             e.preventDefault();
-            e.stopPropagation();
             close();
         });
 
-        // ✅ Fechar por delegation (caso o botão mude / clique em filho)
+        // Fechar clicando fora
         modal.addEventListener("click", (e) => {
-            // clicou no fundo (overlay)
-            if (e.target === modal) return close();
-
-            const closeEl = e.target.closest("#btnClosePro, [data-close-pro]");
-            if (closeEl) return close();
+            if (e.target === modal) close();
         });
 
-        // ESC fecha
+        // ESC
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape" && !modal.hidden) close();
         });
 
-        // Placeholders
-        document.getElementById("btnProLogin")?.addEventListener("click", () => {
-            if (msg) msg.textContent = "Login PRO ainda não implementado.";
+        // LOGIN
+        document.getElementById("btnProLogin")?.addEventListener("click", async () => {
+            const email = document.getElementById("proEmail")?.value?.trim();
+            const senha = document.getElementById("proSenha")?.value;
+
+            if (msg) msg.textContent = "Entrando...";
+
+            try {
+                if (!email || !senha) throw new Error("Preencha e-mail e senha.");
+                if (!Auth()) throw new Error("Auth não inicializado.");
+
+                await Auth().login(email, senha);
+
+                // 🔐 quem decide o plano agora é a sessão
+                Core()?.setPlan("pro");
+
+                if (msg) msg.textContent = "✅ Login realizado!";
+                setTimeout(close, 600);
+            } catch (err) {
+                if (msg) msg.textContent = "❌ " + (err.message || "Erro no login");
+            }
         });
 
+        // Assinar
         document.getElementById("btnProAssinar")?.addEventListener("click", () => {
-            if (msg) msg.textContent = "Assinatura PRO ainda não implementada.";
+            if (msg) msg.textContent = "Assinatura PRO será implementada em breve.";
         });
 
-        setPlan("free");
-
-        // ✅ garante estado inicial fechado visualmente
-        if (modal.hidden) modal.style.display = "none";
-    }
-
-    window.MecPrice.pro = { setupProModal };
-})();
+        // Estado inicial
+        modal.hidden = true;
+        modal.style.display = "non:contentReference[oaicite:0]{index=0}
