@@ -1,3 +1,10 @@
+/* =========================================================
+   MecPrice - CSS base (mantendo identidade do anterior)
+   - Preserva: cores, cards, botões pill, tabs amarelas, inputs
+   - Ajusta: largura / fundo / espaçamento (Figura 1)
+   ========================================================= */
+
+/* RESET */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -5,15 +12,19 @@
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+/* FUNDO (mais elegante, menos neon) - mantém a base #0f172a */
 body {
-  background: #0f172a;
   color: #e5e7eb;
   min-height: 100vh;
+  background:
+    radial-gradient(1100px 650px at 18% 14%, rgba(59, 130, 246, .18), transparent 62%),
+    radial-gradient(900px 520px at 80% 12%, rgba(250, 204, 21, .10), transparent 62%),
+    linear-gradient(135deg, #1c2c7a 0%, #0f172a 55%, #020617 100%);
 }
 
-/* TOPO */
+/* TOPO (mantém seu degradê e borda) */
 .topbar {
-  padding: 1.5rem 1rem;
+  padding: 1.2rem 1rem;
   text-align: center;
   background: linear-gradient(135deg, #1f2937, #020617);
   border-bottom: 1px solid #111827;
@@ -29,29 +40,46 @@ body {
   color: #9ca3af;
 }
 
-/* LAYOUT PRINCIPAL */
+/* =========================================================
+   LAYOUT PRINCIPAL (Figura 1 = mais largo)
+   ========================================================= */
 .container {
-  max-width: 1100px;
-  margin: 1.5rem auto;
+  max-width: 1280px;
+  /* era 1100px (mais largo como a figura 1) */
+  margin: 1.1rem auto;
   padding: 0 1rem 2rem;
 }
 
-/* CARDS */
-.card {
+/* =========================================================
+   CARDS (mantém o mesmo estilo)
+   + Alias .panel para compatibilidade com layout novo
+   ========================================================= */
+.card,
+.panel {
   background: #020617;
   border: 1px solid #111827;
   border-radius: 10px;
   padding: 1.25rem;
-  margin-bottom: 1.25rem;
+  margin: 0 auto 1.25rem;
+  /* centraliza */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  max-width: 1040px;
+  /* “abre” o card como na figura 1 */
 }
 
-.card h2 {
+/* títulos internos */
+.card h2,
+.panel-title {
   margin-bottom: 0.75rem;
   font-size: 1.2rem;
+  font-weight: 700;
 }
 
-/* FORMULÁRIOS */
+/* =========================================================
+   FORMULÁRIOS
+   - Mantém foco amarelo
+   - Alias: .field span e .grid-3/.grid-2 (layout novo)
+   ========================================================= */
 .form-grid {
   display: grid;
   gap: 1rem;
@@ -69,7 +97,8 @@ body {
   gap: 0.25rem;
 }
 
-label {
+label,
+.field span {
   font-size: 0.85rem;
   color: #9ca3af;
 }
@@ -91,7 +120,46 @@ textarea:focus {
   box-shadow: 0 0 0 1px #facc15;
 }
 
-/* GRID DE PEÇAS */
+/* Layout novo (se você estiver usando) */
+.grid-3 {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .grid-3 {
+    grid-template-columns: 1.5fr 1.5fr 1fr;
+  }
+}
+
+.grid-2 {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+}
+
+.field-wide {
+  grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+  .field-wide {
+    grid-column: span 1;
+  }
+}
+
+/* GRID DE PEÇAS (mantém) */
 .parts-grid {
   display: grid;
   gap: 0.75rem;
@@ -104,14 +172,17 @@ textarea:focus {
   }
 }
 
-/* BOTÕES */
+/* =========================================================
+   BOTÕES (mantém sua identidade: pill + sombra)
+   + Alias para classes btn-primary/btn-success/btn-danger
+   ========================================================= */
 .btn {
   border: none;
   border-radius: 999px;
   padding: 0.55rem 1.2rem;
   cursor: pointer;
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
   transition: transform 0.1s, box-shadow 0.1s, opacity 0.1s;
   display: inline-flex;
   align-items: center;
@@ -124,44 +195,58 @@ textarea:focus {
   box-shadow: none;
 }
 
-.primary {
+/* Antigo */
+.primary,
+.btn-primary {
   background: #facc15;
   color: #1f2937;
   box-shadow: 0 8px 20px rgba(250, 204, 21, 0.3);
 }
 
-.secondary {
+.secondary,
+.btn-secondary,
+.btn-outline {
   background: #111827;
   color: #e5e7eb;
   border: 1px solid #1f2937;
 }
 
-.success {
+.success,
+.btn-success {
   background: #22c55e;
   color: #022c22;
   box-shadow: 0 8px 20px rgba(34, 197, 94, 0.35);
 }
 
-.danger {
+.danger,
+.btn-danger {
   background: #ef4444;
   color: #f9fafb;
   box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
 }
 
-.actions-card .actions {
+/* Área de ações (mantém) */
+.actions-card .actions,
+.actions-row {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
-/* TABELA */
-.table-wrapper {
+/* =========================================================
+   TABELA (mantém)
+   + Alias .table-wrap e .table
+   ========================================================= */
+.table-wrapper,
+.table-wrap {
   width: 100%;
   overflow-x: auto;
   margin-top: 0.75rem;
+  border-radius: 10px;
 }
 
-table {
+table,
+.table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.85rem;
@@ -187,7 +272,14 @@ tr:nth-child(even) {
   background: #020617;
 }
 
-/* TOTAIS */
+.t-right {
+  text-align: right;
+}
+
+/* =========================================================
+   TOTAIS (mantém)
+   + Alias .totals-box (layout novo)
+   ========================================================= */
 .totals-row {
   display: flex;
   justify-content: flex-end;
@@ -196,7 +288,16 @@ tr:nth-child(even) {
   font-size: 0.95rem;
 }
 
-/* ORÇAMENTO FINAL */
+.totals-box {
+  margin-top: 1rem;
+  padding: .75rem 1rem;
+  border: 1px solid #111827;
+  background: #020617;
+  border-radius: 10px;
+  max-width: 420px;
+}
+
+/* ORÇAMENTO FINAL (mantém) */
 .orcamento-header {
   display: flex;
   flex-direction: column;
@@ -230,7 +331,7 @@ tr:nth-child(even) {
   font-size: 1.1rem;
 }
 
-/* MENSAGENS */
+/* MENSAGENS (mantém) */
 .error-msg {
   color: #f97316;
   font-size: 0.85rem;
@@ -245,7 +346,7 @@ tr:nth-child(even) {
   min-height: 1rem;
 }
 
-/* FOOTER */
+/* FOOTER (mantém) */
 .footer {
   text-align: center;
   padding: 1.25rem;
@@ -255,29 +356,51 @@ tr:nth-child(even) {
   background: #020617;
 }
 
-/* ABAS */
-.tabs{
-  display:flex;
-  flex-wrap:wrap;
-  gap:0.5rem;
+/* =========================================================
+   ABAS (mantém as suas: pill + amarelo ativo)
+   + Alias .tab para layout novo
+   ========================================================= */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin-bottom: 1rem;
 }
-.tab-btn{
+
+.tab-btn,
+.tab {
   border: 1px solid #1f2937;
-  background:#111827;
-  color:#e5e7eb;
+  background: #111827;
+  color: #e5e7eb;
   border-radius: 999px;
   padding: 0.55rem 1.2rem;
-  cursor:pointer;
-  font-size:0.9rem;
-  font-weight:600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
   transition: transform 0.1s, box-shadow 0.1s, opacity 0.1s;
 }
-.tab-btn:active{ transform: scale(0.97); }
-.tab-btn.active{
-  background:#facc15;
-  color:#1f2937;
+
+.tab-btn:active,
+.tab:active {
+  transform: scale(0.97);
+}
+
+.tab-btn.active,
+.tab.active {
+  background: #facc15;
+  color: #1f2937;
   box-shadow: 0 8px 20px rgba(250, 204, 21, 0.3);
   border-color: transparent;
 }
-.tab-content[hidden]{ display:none !important; }
+
+.tab-content[hidden] {
+  display: none !important;
+}
+
+.pane {
+  display: none;
+}
+
+.pane.active {
+  display: block;
+}
