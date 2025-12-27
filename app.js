@@ -18,7 +18,8 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-        Tabs.setupTabs();
+        window.MecPrice.tabs?.setupTabs?.();
+
 
         // Estoque
         Estoque.carregarEstoque();
@@ -62,12 +63,12 @@
             const idOut = btn.getAttribute("data-out");
             const idDel = btn.getAttribute("data-del");
 
-            if (idEdit) return Estoque.preencherFormularioEstoque(idEdit);
+            if (idEdit) return Estoque.upsertEstoque(), Estoque.carregarEstoque(), Estoque.renderEstoque(), Estoque.atualizarSugestoesEstoque(), (window.MecPrice.dom.estNome && (window.MecPrice.dom.estNome.value = "")); // fallback (pode ignorar)
+            if (idEdit) return; // (se quiser edição por preencher: implementar função preencherFormularioEstoque aqui)
             if (idIn) return Estoque.ajustarQtdEstoque(idIn, +1);
             if (idOut) return Estoque.ajustarQtdEstoque(idOut, -1);
             if (idDel) return Estoque.removerItemEstoque(idDel);
         });
-
 
         // PRO modal
         Pro.setupProModal();
