@@ -6,44 +6,47 @@
     function setupProModal() {
         const btnOpen = document.getElementById("btnOpenPro");
         const modal = document.getElementById("proModal");
-        const btnClose = document.getElementById("btnClosePro");
-
-        const btnLogin = document.getElementById("btnProLogin");
-        const btnAssinar = document.getElementById("btnProAssinar");
         const msg = document.getElementById("proMsg");
 
+        if (!btnOpen) console.warn("[PRO] Não achei #btnOpenPro");
+        if (!modal) console.warn("[PRO] Não achei #proModal");
+
+        if (!modal) return;
+
         function open() {
-            if (!modal) return;
             modal.hidden = false;
             if (msg) msg.textContent = "";
         }
 
         function close() {
-            if (!modal) return;
             modal.hidden = true;
         }
 
+        // Abrir
         btnOpen?.addEventListener("click", open);
-        btnClose?.addEventListener("click", close);
 
-        modal?.addEventListener("click", (e) => {
-            if (e.target === modal) close();
+        // ✅ Fechar (funciona por id OU por data-atributo)
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) return close(); // clicou no fundo
+
+            const closeBtn = e.target.closest("#btnClosePro, [data-close-pro]");
+            if (closeBtn) return close();
         });
 
+        // ESC fecha
         document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape" && modal && !modal.hidden) close();
+            if (e.key === "Escape" && !modal.hidden) close();
         });
 
-        btnLogin?.addEventListener("click", () => {
+        // Placeholder (não atrapalha o fechar)
+        document.getElementById("btnProLogin")?.addEventListener("click", () => {
             if (msg) msg.textContent = "Login PRO ainda não implementado.";
-            // Exemplo futuro: setPlan("pro");
         });
 
-        btnAssinar?.addEventListener("click", () => {
+        document.getElementById("btnProAssinar")?.addEventListener("click", () => {
             if (msg) msg.textContent = "Assinatura PRO ainda não implementada.";
         });
 
-        // plano inicial
         setPlan("free");
     }
 
