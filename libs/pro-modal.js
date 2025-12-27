@@ -8,9 +8,6 @@
         const modal = document.getElementById("proModal");
         const msg = document.getElementById("proMsg");
 
-        if (!btnOpen) console.warn("[PRO] Não achei #btnOpenPro");
-        if (!modal) console.warn("[PRO] Não achei #proModal");
-
         if (!modal) return;
 
         function open() {
@@ -22,10 +19,10 @@
             modal.hidden = true;
         }
 
-        // Abrir
+        // abrir
         btnOpen?.addEventListener("click", open);
 
-        // ✅ Fechar (funciona por id OU por data-atributo)
+        // ✅ fechar por delegation (id OU data-close-pro) e fechar clicando fora
         modal.addEventListener("click", (e) => {
             if (e.target === modal) return close(); // clicou no fundo
 
@@ -38,11 +35,10 @@
             if (e.key === "Escape" && !modal.hidden) close();
         });
 
-        // Placeholder (não atrapalha o fechar)
+        // placeholders
         document.getElementById("btnProLogin")?.addEventListener("click", () => {
             if (msg) msg.textContent = "Login PRO ainda não implementado.";
         });
-
         document.getElementById("btnProAssinar")?.addEventListener("click", () => {
             if (msg) msg.textContent = "Assinatura PRO ainda não implementada.";
         });
