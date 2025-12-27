@@ -1,19 +1,17 @@
 (() => {
     "use strict";
 
+    // evita rodar setup 2x (problema clássico quando app.js duplica/cache)
+    if (window.__MECPRICE_PRO_INIT__) return;
+    window.__MECPRICE_PRO_INIT__ = true;
+
     function setupProModal() {
-        const btnOpen = document.getElementById("btnOpenPro");
         const modal = document.getElementById("proModal");
+        const btnOpen = document.getElementById("btnOpenPro");
         const btnClose = document.getElementById("btnClosePro");
         const msg = document.getElementById("proMsg");
 
-        if (!modal) {
-            console.warn("[PRO] proModal não encontrado");
-            return;
-        }
-
-        const Auth = () => window.MecPrice?.auth;
-        const Core = () => window.MecPrice?.core;
+        if (!modal) return;
 
         function open() {
             modal.hidden = false;
@@ -26,53 +24,38 @@
             modal.style.display = "none";
         }
 
-        // Abrir
+        // expõe para o onclick do HTML
+        window.MecPrice = window.MecPrice || {};
+        window.MecPrice.pro = { open, close, setupProModal };
+
+        // garante estado inicial
+        if (modal.hidden) modal.style.display = "none";
+
+        // abrir
         btnOpen?.addEventListener("click", open);
 
-        // Fechar botão
+        // fechar (direto no botão)
         btnClose?.addEventListener("click", (e) => {
             e.preventDefault();
+            e.stopPropagation();
             close();
         });
 
-        // Fechar clicando fora
+        // fechar clicando fora (no fundo escuro)
         modal.addEventListener("click", (e) => {
             if (e.target === modal) close();
+            const closeEl = e.target.closest("[data-close-pro]");
+            if (closeEl) close();
         });
 
-        // ESC
+        // ESC fecha
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape" && !modal.hidden) close();
         });
+    }
 
-        // LOGIN
-        document.getElementById("btnProLogin")?.addEventListener("click", async () => {
-            const email = document.getElementById("proEmail")?.value?.trim();
-            const senha = document.getElementById("proSenha")?.value;
-
-            if (msg) msg.textContent = "Entrando...";
-
-            try {
-                if (!email || !senha) throw new Error("Preencha e-mail e senha.");
-                if (!Auth()) throw new Error("Auth não inicializado.");
-
-                await Auth().login(email, senha);
-
-                // 🔐 quem decide o plano agora é a sessão
-                Core()?.setPlan("pro");
-
-                if (msg) msg.textContent = "✅ Login realizado!";
-                setTimeout(close, 600);
-            } catch (err) {
-                if (msg) msg.textContent = "❌ " + (err.message || "Erro no login");
-            }
-        });
-
-        // Assinar
-        document.getElementById("btnProAssinar")?.addEventListener("click", () => {
-            if (msg) msg.textContent = "Assinatura PRO será implementada em breve.";
-        });
-
-        // Estado inicial
-        modal.hidden = true;
-        modal.style.display = "non:contentReference[oaicite:0]{index=0}
+    // compatível com seu app.js atual
+    window.MecPrice = window.MecPrice || {};
+    window.MecPrice.pro = window.MecPrice.pro || {};
+    window.MecPrice.pro.setupProModal = setupProModal;
+})();
