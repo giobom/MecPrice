@@ -9,7 +9,7 @@
   <meta name="description"
     content="MecPrice: gere orçamentos automotivos rápido, com controle de peças e estoque. PDF e PWA instalável." />
 
-  <!-- Google tag (gtag.js) - APENAS 1 VEZ -->
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z51NZDH621"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -327,13 +327,14 @@
     </div>
   </div>
 
-  <!-- =============================
-       SCRIPTS (SEM DUPLICAR)
-  ============================== -->
-
-  <!-- jsPDF + AutoTable (APENAS 1 VEZ) -->
+  <!-- jsPDF + AutoTable -->
   <script src="libs/jspdf.umd.min.js"></script>
   <script src="libs/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="libs/supabase.js"></script>
+  <script src="libs/auth.js"></script>
 
   <!-- MecPrice modules -->
   <script src="libs/core.js"></script>
