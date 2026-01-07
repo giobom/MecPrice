@@ -35,7 +35,7 @@ body {
 }
 
 /* =========================================================
-   LAYOUT PRINCIPAL (Figura 1 = mais largo)
+   LAYOUT PRINCIPAL 
    ========================================================= */
 .container {
   max-width: 1280px;
@@ -45,8 +45,7 @@ body {
 }
 
 /* =========================================================
-   CARDS (mantém o mesmo estilo)
-   + Alias .panel para compatibilidade com layout novo
+   CARDS 
    ========================================================= */
 .card,
 .panel {
@@ -71,8 +70,6 @@ body {
 
 /* =========================================================
    FORMULÁRIOS
-   - Mantém foco amarelo
-   - Alias: .field span e .grid-3/.grid-2 (layout novo)
    ========================================================= */
 .form-grid {
   display: grid;
@@ -167,8 +164,7 @@ textarea:focus {
 }
 
 /* =========================================================
-   BOTÕES (mantém sua identidade: pill + sombra)
-   + Alias para classes btn-primary/btn-success/btn-danger
+   BOTÕES 
    ========================================================= */
 .btn {
   border: none;
@@ -228,8 +224,7 @@ textarea:focus {
 }
 
 /* =========================================================
-   TABELA (mantém)
-   + Alias .table-wrap e .table
+   TABELA 
    ========================================================= */
 .table-wrapper,
 .table-wrap {
@@ -271,8 +266,7 @@ tr:nth-child(even) {
 }
 
 /* =========================================================
-   TOTAIS (mantém)
-   + Alias .totals-box (layout novo)
+   TOTAIS 
    ========================================================= */
 .totals-row {
   display: flex;
@@ -351,8 +345,7 @@ tr:nth-child(even) {
 }
 
 /* =========================================================
-   ABAS (mantém as suas: pill + amarelo ativo)
-   + Alias .tab para layout novo
+   ABAS 
    ========================================================= */
 .tabs {
   display: flex;
@@ -361,8 +354,7 @@ tr:nth-child(even) {
   margin-bottom: 1rem;
 }
 
-.tab-btn,
-.tab {
+.tab-btn {
   border: 1px solid #1f2937;
   background: #111827;
   color: #e5e7eb;
@@ -374,27 +366,18 @@ tr:nth-child(even) {
   transition: transform 0.1s, box-shadow 0.1s, opacity 0.1s;
 }
 
-.tab-btn:active,
-.tab:active {
+.tab-btn:active {
   transform: scale(0.97);
 }
 
-.tab-btn.active,
-.tab.active {
+.tab-btn.active {
   background: #facc15;
   color: #1f2937;
   box-shadow: 0 8px 20px rgba(250, 204, 21, 0.3);
   border-color: transparent;
 }
 
-.tab-content[hidden] {
+/* qualquer painel que estiver com hidden some */
+[hidden] {
   display: none !important;
-}
-
-.pane {
-  display: none;
-}
-
-.pane.active {
-  display: block;
 }
