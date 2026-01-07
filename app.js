@@ -2,32 +2,34 @@
     "use strict";
 
     const MecPrice = window.MecPrice;
-    const DOM = MecPrice.dom;
-    const Estoque = MecPrice.estoque;
-    const Orc = MecPrice.orcamento;
-    const PDF = MecPrice.pdf;
-    const Pro = MecPrice.pro;
-    const Validators = MecPrice.validators;
+    const DOM = MecPrice?.dom;
+    const Estoque = MecPrice?.estoque;
+    const Orc = MecPrice?.orcamento;
+    const PDF = MecPrice?.pdf;
+    const Pro = MecPrice?.pro;
+    const Validators = MecPrice?.validators;
 
     function registrarServiceWorker() {
         if (!("serviceWorker" in navigator)) return;
+
+        // importante: o arquivo PRECISA existir no mesmo nível do index.html
+        // (ex: /MecPrice/service-worker.js no GitHub Pages)
         window.addEventListener("load", () => {
-            navigator.serviceWorker.register("./service-worker.js").catch((err) => {
-                console.log("Erro ao registrar service worker:", err);
-            });
+            navigator.serviceWorker
+                .register("service-worker.js")
+                .catch((err) => console.log("Erro ao registrar service worker:", err));
         });
     }
 
     function setErroPrincipal(msg = "") {
-        if (!DOM.erroPrincipal) return;
+        if (!DOM?.erroPrincipal) return;
         DOM.erroPrincipal.textContent = msg;
     }
 
     function validarCpfCnpjUI() {
-        // Se o DOM não tiver cpfCnpj, não trava o app
-        const raw = DOM.cpfCnpj?.value ?? "";
+        const raw = DOM?.cpfCnpj?.value ?? "";
 
-        // Se não tiver validators carregado, não trava (mas avisa no console)
+        // Se validators não carregou, não trava o app
         if (!Validators?.validarCpfCnpj) {
             console.warn("[MecPrice] validators.js não carregado (MecPrice.validators ausente).");
             return true;
@@ -37,92 +39,112 @@
 
         if (!ok) {
             setErroPrincipal("CPF/CNPJ inválido. Confira os números e tente novamente.");
-            DOM.cpfCnpj?.focus?.();
+            DOM?.cpfCnpj?.focus?.();
             return false;
         }
 
-        // limpa erro se estiver ok
         setErroPrincipal("");
         return true;
     }
 
+    // ✅ Fallback: abas funcionam mesmo se libs/tabs.js falhar
+    function setupTabsFallback() {
+        const btns = document.querySelectorAll(".tab-btn");
+        const panels = document.querySelectorAll(".tab-content");
+        if (!btns.length || !panels.length) return;
+
+        function ativar(tabId) {
+            panels.forEach((p) => {
+                p.hidden = p.id !== tabId;
+            });
+
+            btns.forEach((b) => {
+                const isActive = b.dataset.tab === tabId;
+                b.classList.toggle("active", isActive);
+                b.setAttribute("aria-selected", String(isActive));
+            });
+        }
+
+        btns.forEach((btn) => {
+            btn.setAttribute("role", "tab");
+            btn.addEventListener("click", () => {
+                const tabId = btn.dataset.tab;
+                if (tabId) ativar(tabId);
+            });
+        });
+
+        // inicial
+        const initial = document.querySelector(".tab-btn.active")?.dataset.tab || "tab-orcamento";
+        ativar(initial);
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
-        // Abas
-        MecPrice.tabs?.setupTabs?.();
+        // Abas: tenta o módulo, se não existir usa fallback
+        if (MecPrice?.tabs?.setupTabs) MecPrice.tabs.setupTabs();
+        else setupTabsFallback();
 
         // Estoque
-        Estoque.carregarEstoque();
-        Estoque.renderEstoque();
-        Estoque.atualizarSugestoesEstoque();
+        Estoque?.carregarEstoque?.();
+        Estoque?.renderEstoque?.();
+        Estoque?.atualizarSugestoesEstoque?.();
 
         // Integração: autopreencher preço pelo estoque
-        DOM.nomePecaInput?.addEventListener("input", Estoque.tentarAutoPreencherPreco);
-        DOM.nomePecaInput?.addEventListener("change", Estoque.tentarAutoPreencherPreco);
+        DOM?.nomePecaInput?.addEventListener?.("input", Estoque?.tentarAutoPreencherPreco);
+        DOM?.nomePecaInput?.addEventListener?.("change", Estoque?.tentarAutoPreencherPreco);
 
         // Orçamento
-        Orc.setupRemoverPecaDelegation();
-        Orc.verificarUltimoOrcamento();
-        Orc.atualizarTabelaPecas();
+        Orc?.setupRemoverPecaDelegation?.();
+        Orc?.verificarUltimoOrcamento?.();
+        Orc?.atualizarTabelaPecas?.();
 
         // Botões orçamento (com validação CPF/CNPJ)
-        DOM.btnAdicionarPeca?.addEventListener("click", Orc.adicionarPeca);
+        DOM?.btnAdicionarPeca?.addEventListener?.("click", Orc?.adicionarPeca);
 
-        DOM.btnGerar?.addEventListener("click", () => {
+        DOM?.btnGerar?.addEventListener?.("click", () => {
             if (!validarCpfCnpjUI()) return;
-            Orc.gerarOrcamento();
+            Orc?.gerarOrcamento?.();
         });
 
-        DOM.btnSalvar?.addEventListener("click", () => {
+        DOM?.btnSalvar?.addEventListener?.("click", () => {
             if (!validarCpfCnpjUI()) return;
-            Orc.salvarOrcamento();
+            Orc?.salvarOrcamento?.();
         });
 
-        DOM.btnLimpar?.addEventListener("click", () => {
+        DOM?.btnLimpar?.addEventListener?.("click", () => {
             setErroPrincipal("");
-            Orc.limparTudo();
+            Orc?.limparTudo?.();
         });
 
-        DOM.btnCarregarUltimo?.addEventListener("click", Orc.carregarUltimoOrcamento);
+        DOM?.btnCarregarUltimo?.addEventListener?.("click", Orc?.carregarUltimoOrcamento);
 
-        // PDF (roteador free/pro)
-        DOM.btnPDF?.addEventListener("click", PDF.gerarPDF);
+        // PDF
+        DOM?.btnPDF?.addEventListener?.("click", PDF?.gerarPDF);
 
         // Estoque listeners
-        DOM.btnAddItem?.addEventListener("click", Estoque.upsertEstoque);
-        DOM.btnExportEstoque?.addEventListener("click", Estoque.exportarEstoqueJSON);
+        DOM?.btnAddItem?.addEventListener?.("click", Estoque?.upsertEstoque);
+        DOM?.btnExportEstoque?.addEventListener?.("click", Estoque?.exportarEstoqueJSON);
 
-        DOM.importEstoque?.addEventListener("change", (e) => {
+        DOM?.importEstoque?.addEventListener?.("change", (e) => {
             const file = e.target.files?.[0];
-            if (file) Estoque.importarEstoqueJSON(file);
+            if (file) Estoque?.importarEstoqueJSON?.(file);
         });
 
-        // Estoque - delegation (limpo, sem código morto)
-        DOM.tbodyEstoque?.addEventListener("click", (e) => {
+        // Estoque - delegation (ações da tabela)
+        DOM?.tbodyEstoque?.addEventListener?.("click", (e) => {
             const btn = e.target.closest("button");
             if (!btn) return;
 
-            const idEdit = btn.getAttribute("data-edit");
             const idIn = btn.getAttribute("data-in");
             const idOut = btn.getAttribute("data-out");
             const idDel = btn.getAttribute("data-del");
 
-            // EDIÇÃO: se você ainda não implementou "preencher formulário",
-            // aqui é o lugar certo. Por enquanto, não faz nada.
-            if (idEdit) {
-                // TODO: Estoque.preencherFormularioEstoque(idEdit)
-                return;
-            }
-
-            if (idIn) return Estoque.ajustarQtdEstoque(idIn, +1);
-            if (idOut) return Estoque.ajustarQtdEstoque(idOut, -1);
-            if (idDel) return Estoque.removerItemEstoque(idDel);
+            if (idIn) return Estoque?.ajustarQtdEstoque?.(idIn, +1);
+            if (idOut) return Estoque?.ajustarQtdEstoque?.(idOut, -1);
+            if (idDel) return Estoque?.removerItemEstoque?.(idDel);
         });
 
-        // Validação ao sair do campo (melhor UX)
-        DOM.cpfCnpj?.addEventListener("blur", validarCpfCnpjUI);
-
         // PRO modal
-        Pro.setupProModal();
+        Pro?.setupProModal?.();
 
         // PWA
         registrarServiceWorker();
