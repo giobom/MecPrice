@@ -1,82 +1,145 @@
 # 🛠️ MecPrice – Sistema de Orçamentos Automotivos (PWA)
 
-Orçamentos rápidos, precisos e profissionais para oficinas mecânicas e autoelétricas.
+Orçamentos rápidos, profissionais e organizados para oficinas mecânicas e autoelétricas.
 
-👉 **Demo (GitHub Pages):** <https://giobom.github.io/MecPrice/>
-
----
-
-## 📌 Descrição
-
-O **MecPrice** é um aplicativo web (**PWA**) criado para facilitar e profissionalizar a elaboração de orçamentos automotivos.  
-Com uma interface simples, responsiva e intuitiva, permite registrar **peças**, **mão de obra** e gerar **totais automaticamente**.
-
-✅ Desenvolvido com **HTML + CSS + JavaScript (Vanilla)**  
-✅ Roda em qualquer navegador moderno  
-✅ Pode ser instalado como app no **Windows, Android e iOS**
+👉 **Demo (GitHub Pages):**  
+<https://giobom.github.io/MecPrice/>
 
 ---
 
-## ✅ Funcionalidades
+## 📌 Sobre o projeto
 
-### Orçamento
+O **MecPrice** é um aplicativo web progressivo (**PWA**) desenvolvido para facilitar a criação de **orçamentos automotivos**, com controle de **peças**, **mão de obra** e **estoque**.
 
-- Cadastro de cliente e serviço
-  - Nome do cliente
-  - Descrição do serviço
-  - Valor da mão de obra
-- Gestão de peças do orçamento
-  - Adicionar peças (nome, quantidade, valor unitário)
-  - Remover peças individualmente
+O foco do projeto é simplicidade para o mecânico, organização para a oficina e base sólida para evolução futura (Área PRO).
+
+✅ **Vanilla JavaScript (modular)**  
+✅ **PWA instalável (PC, Android e iOS)**  
+✅ **Funciona offline**  
+✅ **Sem dependências de framework**
+
+---
+
+## ✨ Funcionalidades
+
+### 🔧 Orçamento
+
+- Cadastro de cliente e veículo
+  - Nome
+  - Telefone
+  - CPF/CNPJ (opcional, validado)
+  - Placa, modelo, ano e KM
+- Descrição do serviço
+- Valor de mão de obra
+- Gestão de peças
+  - Nome, quantidade e valor unitário
+  - Remoção individual
 - Cálculos automáticos
   - Total de peças
   - Total geral (peças + mão de obra)
-  - Valores em moeda (R$)
 
-### Armazenamento
+---
 
-- Salva o último orçamento com **LocalStorage**
-- Recupera automaticamente ao reabrir
+### 📦 Estoque
 
-### PWA
+- Cadastro de peças
+  - Nome, SKU, categoria
+  - Custo, preço e quantidade
+  - Estoque mínimo
+- Ajuste rápido de quantidade (+ / -)
+- Integração com orçamento (autopreenchimento)
+- Backup e restauração em JSON (Local)
 
-- Instalável (PC / Android / iPhone)
-- Funciona offline (Service Worker)
+---
+
+### 🧠 Validações
+
+- CPF e CNPJ válidos (quando preenchidos)
+- Campos críticos protegidos contra erro
+- Feedback visual para o usuário
+
+---
+
+### 📄 PDF
+
+- Geração de orçamento em PDF
+- Layout profissional
+- Pronto para envio ao cliente
+
+---
+
+### 🔐 Área PRO (em evolução)
+
+- Modal de login
+- Estrutura preparada para planos
+- Base para histórico, relatórios e nuvem
+
+---
+
+## 📲 PWA
+
+- Instalável como aplicativo
+- Funciona offline
+- Service Worker configurado
 - Ícones 192px e 512px
-- Manifest configurado
+- Manifest pronto
 
 ---
 
-## 🚀 Instalação (como app)
-
-### ✔️ No computador (Chrome/Edge)
-
-1. Acesse a demo
-2. Clique no ícone de **instalar** na barra de endereço
-3. Confirme em **Instalar**
-
-### ✔️ No iPhone (Safari)
-
-1. Acesse a demo no Safari
-2. Toque em **Compartilhar**
-3. Toque em **Adicionar à Tela de Início**
-
-### ✔️ No Android (Chrome)
-
-1. Acesse a demo
-2. Toque em **Adicionar à tela inicial**
-3. Confirme
-
----
-
-## 🧩 Estrutura do projeto
+## 🧱 Estrutura do projeto
 
 ```txt
 MecPrice/
- ├── index.html
- ├── style.css
- ├── script.js
- ├── manifest.json
- ├── service-worker.js
- ├── icon-192.png
- └── icon-512.png
+├── index.html
+├── style.css
+├── app.js                # Boot da aplicação
+├── manifest.json
+├── service-worker.js
+├── icon-192.png
+├── icon-512.png
+└── libs/
+    ├── core.js           # Estado global
+    ├── dom.js            # Cache de elementos DOM
+    ├── storage.js        # LocalStorage
+    ├── tabs.js           # Navegação por abas
+    ├── estoque.js        # Controle de estoque
+    ├── orcamento.js      # Lógica de orçamento
+    ├── pdf.js            # Geração de PDF
+    ├── validators.js    # Validação CPF/CNPJ
+    └── pro-modal.js      # Área PRO
+
+🚀 Instalação como App
+💻 Computador (Chrome / Edge)
+
+Acesse a demo
+
+Clique em Instalar
+
+Confirme
+
+📱 Android
+
+Acesse a demo
+
+Toque em Adicionar à tela inicial
+
+Confirme
+
+🍎 iPhone (Safari)
+
+Acesse a demo
+
+Compartilhar → Adicionar à Tela de Início
+
+🧭 Status do projeto
+
+🟢 MVP funcional
+🟡 Evolução contínua
+🔵 Base preparada para SaaS (PRO)
+
+👨‍💻 Autor
+
+Giovani Araújo
+Mecânico automotivo | Eletricista | Estudante de Engenharia de Software
+
+Projeto criado para unir chão de oficina + tecnologia.
