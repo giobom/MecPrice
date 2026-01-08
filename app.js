@@ -11,13 +11,10 @@
 
     function registrarServiceWorker() {
         if (!("serviceWorker" in navigator)) return;
-
-        // importante: o arquivo PRECISA existir no mesmo nível do index.html
-        // (ex: /MecPrice/service-worker.js no GitHub Pages)
         window.addEventListener("load", () => {
-            navigator.serviceWorker
-                .register("service-worker.js")
-                .catch((err) => console.log("Erro ao registrar service worker:", err));
+            navigator.serviceWorker.register("./service-worker.js").catch((err) => {
+                console.log("Erro ao registrar service worker:", err);
+            });
         });
     }
 
@@ -27,19 +24,16 @@
     }
 
     function validarCpfCnpjUI() {
-        const raw = DOM?.cpfCnpj?.value ?? "";
+        // ✅ correto: no dom.js é cpfCnpjInput (não cpfCnpj)
+        const raw = DOM?.cpfCnpjInput?.value ?? "";
 
-        // Se validators não carregou, não trava o app
-        if (!Validators?.validarCpfCnpj) {
-            console.warn("[MecPrice] validators.js não carregado (MecPrice.validators ausente).");
-            return true;
-        }
+        if (!Validators?.validarCpfCnpj) return true; // não trava se validators não carregou
 
         const { ok } = Validators.validarCpfCnpj(raw);
 
         if (!ok) {
             setErroPrincipal("CPF/CNPJ inválido. Confira os números e tente novamente.");
-            DOM?.cpfCnpj?.focus?.();
+            DOM?.cpfCnpjInput?.focus?.();
             return false;
         }
 
@@ -47,21 +41,18 @@
         return true;
     }
 
-    // ✅ Fallback: abas funcionam mesmo se libs/tabs.js falhar
+    // Fallback de abas (se tabs.js falhar)
     function setupTabsFallback() {
         const btns = document.querySelectorAll(".tab-btn");
         const panels = document.querySelectorAll(".tab-content");
         if (!btns.length || !panels.length) return;
 
         function ativar(tabId) {
-            panels.forEach((p) => {
-                p.hidden = p.id !== tabId;
-            });
-
+            panels.forEach((p) => (p.hidden = p.id !== tabId));
             btns.forEach((b) => {
-                const isActive = b.dataset.tab === tabId;
-                b.classList.toggle("active", isActive);
-                b.setAttribute("aria-selected", String(isActive));
+                const on = b.dataset.tab === tabId;
+                b.classList.toggle("active", on);
+                b.setAttribute("aria-selected", String(on));
             });
         }
 
@@ -73,13 +64,11 @@
             });
         });
 
-        // inicial
-        const initial = document.querySelector(".tab-btn.active")?.dataset.tab || "tab-orcamento";
-        ativar(initial);
+        ativar(document.querySelector(".tab-btn.active")?.dataset.tab || "tab-orcamento");
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-        // Abas: tenta o módulo, se não existir usa fallback
+        // Abas
         if (MecPrice?.tabs?.setupTabs) MecPrice.tabs.setupTabs();
         else setupTabsFallback();
 
@@ -92,14 +81,20 @@
         DOM?.nomePecaInput?.addEventListener?.("input", Estoque?.tentarAutoPreencherPreco);
         DOM?.nomePecaInput?.addEventListener?.("change", Estoque?.tentarAutoPreencherPreco);
 
-        // Orçamento
+        // Orçamento: delegations
         Orc?.setupRemoverPecaDelegation?.();
-        Orc?.verificarUltimoOrcamento?.();
+        Orc?.setupRemoverServicoDelegation?.();
+
+        // Render inicial
         Orc?.atualizarTabelaPecas?.();
+        Orc?.atualizarTabelaServicos?.();
+        Orc?.verificarUltimoOrcamento?.();
 
-        // Botões orçamento (com validação CPF/CNPJ)
+        // Botões: peças e serviços
         DOM?.btnAdicionarPeca?.addEventListener?.("click", Orc?.adicionarPeca);
+        DOM?.btnAddServico?.addEventListener?.("click", Orc?.adicionarServico);
 
+        // Gerar / salvar / limpar
         DOM?.btnGerar?.addEventListener?.("click", () => {
             if (!validarCpfCnpjUI()) return;
             Orc?.gerarOrcamento?.();
@@ -129,7 +124,7 @@
             if (file) Estoque?.importarEstoqueJSON?.(file);
         });
 
-        // Estoque - delegation (ações da tabela)
+        // Delegation da tabela de estoque
         DOM?.tbodyEstoque?.addEventListener?.("click", (e) => {
             const btn = e.target.closest("button");
             if (!btn) return;
@@ -143,10 +138,8 @@
             if (idDel) return Estoque?.removerItemEstoque?.(idDel);
         });
 
-        // PRO modal
+        // PRO modal + PWA
         Pro?.setupProModal?.();
-
-        // PWA
         registrarServiceWorker();
     });
 })();
