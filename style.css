@@ -507,3 +507,120 @@ table button.btn-danger {
 .table-wrapper table {
   min-width: 520px;
 }
+
+/* =========================================
+   BOTÕES "ADICIONAR" (serviço / peça)
+   ========================================= */
+
+/* Se você puder colocar a classe .btn-add no HTML, melhor.
+   Mas também vou cobrir botões que tenham texto "Adicionar" ou ids comuns. */
+.btn-add,
+button[id*="add" i],
+button[id*="adicionar" i],
+button[class*="add" i],
+button[class*="adicionar" i] {
+  width: fit-content;
+  min-width: 220px;
+  height: 46px;
+  padding: 0 18px;
+
+  border-radius: 999px;
+  border: 1px solid rgba(250, 204, 21, 0.35);
+
+  background: linear-gradient(135deg,
+      rgba(250, 204, 21, 0.22),
+      rgba(250, 204, 21, 0.10));
+  color: #fef3c7;
+  /* texto claro com tom quente */
+  font-weight: 800;
+  letter-spacing: .2px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, .28),
+    0 0 0 1px rgba(255, 255, 255, .05) inset;
+
+  transition: transform .12s ease, filter .12s ease, box-shadow .12s ease, border-color .12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.add-action {
+  margin-top: 16px;
+}
+
+/* Ícone (sem depender de biblioteca) */
+.btn-add::before,
+button[id*="add" i]::before,
+button[id*="adicionar" i]::before,
+button[class*="add" i]::before,
+button[class*="adicionar" i]::before {
+  content: "+";
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(250, 204, 21, 0.18);
+  border: 1px solid rgba(250, 204, 21, 0.35);
+  color: #fde68a;
+  font-weight: 900;
+  line-height: 1;
+}
+
+/* Hover / active */
+.btn-add:hover,
+button[id*="add" i]:hover,
+button[id*="adicionar" i]:hover,
+button[class*="add" i]:hover,
+button[class*="adicionar" i]:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  border-color: rgba(250, 204, 21, 0.55);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, .32),
+    0 0 0 1px rgba(255, 255, 255, .06) inset;
+}
+
+.btn-add:active,
+button[id*="add" i]:active,
+button[id*="adicionar" i]:active,
+button[class*="add" i]:active,
+button[class*="adicionar" i]:active {
+  transform: translateY(0) scale(.98);
+  filter: brightness(1.00);
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, .25),
+    0 0 0 1px rgba(255, 255, 255, .05) inset;
+}
+
+/* Focus acessível */
+.btn-add:focus-visible,
+button[id*="add" i]:focus-visible,
+button[id*="adicionar" i]:focus-visible,
+button[class*="add" i]:focus-visible,
+button[class*="adicionar" i]:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px rgba(250, 204, 21, .55),
+    0 12px 26px rgba(0, 0, 0, .30);
+}
+
+/* Mobile: deixa grande, bonito e fácil de clicar */
+@media (max-width: 520px) {
+
+  .btn-add,
+  button[id*="add" i],
+  button[id*="adicionar" i],
+  button[class*="add" i],
+  button[class*="adicionar" i] {
+    width: 100%;
+    min-width: 0;
+    height: 52px;
+    font-size: 1.02rem;
+  }
+}
