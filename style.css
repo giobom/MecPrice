@@ -6,22 +6,52 @@
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* FUNDO (mais elegante, menos neon) - mantém a base #0f172a */
+:root {
+  --bg1: #1c2c7a;
+  --bg2: #0f172a;
+  --bg3: #020617;
+
+  --panel: #020617;
+  --panelBorder: #111827;
+
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+
+  --brand: #facc15;
+  /* amarelo */
+  --brand2: #ff3b3b;
+  /* vermelho */
+
+  --blueBtn: #1f2a44;
+  --blueBtn2: #111827;
+
+  --shadow: 0 10px 30px rgba(0, 0, 0, .40);
+  --shadowSoft: 0 8px 20px rgba(0, 0, 0, .25);
+
+  --radius: 10px;
+  --radiusPill: 999px;
+
+  --focus: 0 0 0 2px rgba(250, 204, 21, .55);
+}
+
+/* FUNDO */
 body {
-  color: #e5e7eb;
+  color: var(--text);
   min-height: 100vh;
   background:
     radial-gradient(1100px 650px at 18% 14%, rgba(59, 130, 246, .18), transparent 62%),
     radial-gradient(900px 520px at 80% 12%, rgba(250, 204, 21, .10), transparent 62%),
-    linear-gradient(135deg, #1c2c7a 0%, #0f172a 55%, #020617 100%);
+    linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 55%, var(--bg3) 100%);
 }
 
-/* TOPO (mantém seu degradê e borda) */
+/* =========================================================
+   TOPO
+   ========================================================= */
 .topbar {
   padding: 1.2rem 1rem;
   text-align: center;
   background: linear-gradient(135deg, #1f2937, #020617);
-  border-bottom: 1px solid #111827;
+  border-bottom: 1px solid var(--panelBorder);
 }
 
 .topbar h1 {
@@ -31,33 +61,30 @@ body {
 
 .subtitle {
   font-size: 0.9rem;
-  color: #9ca3af;
+  color: var(--muted);
 }
 
 /* =========================================================
-   LAYOUT PRINCIPAL 
+   LAYOUT PRINCIPAL
    ========================================================= */
 .container {
   max-width: 1280px;
-  /* era 1100px (mais largo como a figura 1) */
   margin: 1.1rem auto;
   padding: 0 1rem 2rem;
 }
 
 /* =========================================================
-   CARDS 
+   CARDS / PAINÉIS
    ========================================================= */
 .card,
 .panel {
-  background: #020617;
-  border: 1px solid #111827;
-  border-radius: 10px;
+  background: var(--panel);
+  border: 1px solid var(--panelBorder);
+  border-radius: var(--radius);
   padding: 1.25rem;
   margin: 0 auto 1.25rem;
-  /* centraliza */
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow);
   max-width: 1040px;
-  /* “abre” o card como na figura 1 */
 }
 
 /* títulos internos */
@@ -65,11 +92,11 @@ body {
 .panel-title {
   margin-bottom: 0.75rem;
   font-size: 1.2rem;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 /* =========================================================
-   FORMULÁRIOS
+   FORMULÁRIOS / INPUTS
    ========================================================= */
 .form-grid {
   display: grid;
@@ -91,27 +118,32 @@ body {
 label,
 .field span {
   font-size: 0.85rem;
-  color: #9ca3af;
+  color: var(--muted);
 }
 
 input,
 textarea {
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
+  padding: 0.6rem 0.85rem;
+  border-radius: 8px;
   border: 1px solid #1f2937;
-  background: #020617;
-  color: #e5e7eb;
+  background: var(--panel);
+  color: var(--text);
   font-size: 0.95rem;
+}
+
+textarea {
+  min-height: 84px;
+  resize: vertical;
 }
 
 input:focus,
 textarea:focus {
   outline: none;
-  border-color: #facc15;
-  box-shadow: 0 0 0 1px #facc15;
+  border-color: rgba(250, 204, 21, .8);
+  box-shadow: var(--focus);
 }
 
-/* Layout novo (se você estiver usando) */
+/* Layout novo */
 .grid-3 {
   display: grid;
   gap: 1rem;
@@ -150,7 +182,7 @@ textarea:focus {
   }
 }
 
-/* GRID DE PEÇAS (mantém) */
+/* GRID DE PEÇAS */
 .parts-grid {
   display: grid;
   gap: 0.75rem;
@@ -168,70 +200,124 @@ textarea:focus {
    ========================================================= */
 .btn {
   border: none;
-  border-radius: 999px;
-  padding: 0.55rem 1.2rem;
+  border-radius: var(--radiusPill);
+  padding: 12px 18px;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: transform 0.1s, box-shadow 0.1s, opacity 0.1s;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: .2px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
+  gap: 0.45rem;
+
+  transition: transform .12s ease, filter .12s ease, box-shadow .12s ease, opacity .12s ease;
+  box-shadow: var(--shadowSoft);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
 }
 
 .btn:active {
-  transform: scale(0.97);
+  transform: translateY(0px) scale(.98);
   box-shadow: none;
 }
 
-/* Antigo */
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus), var(--shadowSoft);
+}
+
+/* Compatibilidade com classes antigas */
 .primary,
 .btn-primary {
-  background: #facc15;
-  color: #1f2937;
-  box-shadow: 0 8px 20px rgba(250, 204, 21, 0.3);
+  background: linear-gradient(135deg, #ffcc00, #ffb703);
+  color: #1a1a1a;
 }
 
 .secondary,
-.btn-secondary,
+.btn-secondary {
+  background: var(--blueBtn);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, .10);
+}
+
 .btn-outline {
-  background: #111827;
-  color: #e5e7eb;
-  border: 1px solid #1f2937;
+  background: var(--blueBtn2);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, .14);
+  box-shadow: none;
 }
 
 .success,
 .btn-success {
-  background: #22c55e;
-  color: #022c22;
-  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.35);
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #041b12;
 }
 
 .danger,
 .btn-danger {
-  background: #ef4444;
-  color: #f9fafb;
-  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+  background: linear-gradient(135deg, #ff4d4d, #e63946);
+  color: #fff;
 }
 
-/* Área de ações (mantém) */
-.actions-card .actions,
-.actions-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+/* Botão “Adicionar” (peça/serviço)  */
+.btn-add {
+  background: #0f172a;
+  color: #93c5fd;
+  border: 1px dashed rgba(147, 197, 253, .35);
+  box-shadow: none;
+}
+
+.btn-add:hover {
+  background: #111c3a;
 }
 
 /* =========================================================
-   TABELA 
+   AÇÕES 
+   ========================================================= */
+.actions,
+.actions-row,
+.actions-card .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 0.9rem;
+  justify-content: center;
+  /* centraliza como no print 4 */
+  align-items: center;
+}
+
+/* Mobile: empilha e deixa confortável */
+@media (max-width: 480px) {
+
+  .actions,
+  .actions-row,
+  .actions-card .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions .btn,
+  .actions-row .btn,
+  .actions-card .actions .btn {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   TABELAS
    ========================================================= */
 .table-wrapper,
 .table-wrap {
   width: 100%;
   overflow-x: auto;
   margin-top: 0.75rem;
-  border-radius: 10px;
+  border-radius: var(--radius);
 }
 
 table,
@@ -242,31 +328,40 @@ table,
 }
 
 thead {
-  background: #020617;
+  background: var(--panel);
 }
 
 th,
 td {
-  padding: 0.4rem 0.5rem;
-  border-bottom: 1px solid #111827;
+  padding: 0.45rem 0.55rem;
+  border-bottom: 1px solid var(--panelBorder);
   text-align: left;
 }
 
 th {
-  font-weight: 600;
-  color: #9ca3af;
+  font-weight: 700;
+  color: var(--muted);
 }
 
 tr:nth-child(even) {
-  background: #020617;
+  background: rgba(255, 255, 255, .02);
 }
 
 .t-right {
   text-align: right;
 }
 
+/* botões dentro de tabelas */
+table button.btn.danger,
+table button.btn-danger {
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  border-radius: var(--radiusPill);
+  box-shadow: none;
+}
+
 /* =========================================================
-   TOTAIS 
+   TOTAIS
    ========================================================= */
 .totals-row {
   display: flex;
@@ -279,13 +374,27 @@ tr:nth-child(even) {
 .totals-box {
   margin-top: 1rem;
   padding: .75rem 1rem;
-  border: 1px solid #111827;
-  background: #020617;
-  border-radius: 10px;
+  border: 1px solid var(--panelBorder);
+  background: var(--panel);
+  border-radius: var(--radius);
   max-width: 420px;
 }
 
-/* ORÇAMENTO FINAL (mantém) */
+.totals {
+  margin-top: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid var(--panelBorder);
+  background: var(--panel);
+  border-radius: var(--radius);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+/* =========================================================
+   ORÇAMENTO FINAL
+   ========================================================= */
 .orcamento-header {
   display: flex;
   flex-direction: column;
@@ -319,7 +428,9 @@ tr:nth-child(even) {
   font-size: 1.1rem;
 }
 
-/* MENSAGENS (mantém) */
+/* =========================================================
+   MENSAGENS
+   ========================================================= */
 .error-msg {
   color: #f97316;
   font-size: 0.85rem;
@@ -334,47 +445,57 @@ tr:nth-child(even) {
   min-height: 1rem;
 }
 
-/* FOOTER (mantém) */
+/* =========================================================
+   FOOTER
+   ========================================================= */
 .footer {
   text-align: center;
   padding: 1.25rem;
   font-size: 0.8rem;
   color: #6b7280;
-  border-top: 1px solid #111827;
-  background: #020617;
+  border-top: 1px solid var(--panelBorder);
+  background: var(--panel);
 }
 
 /* =========================================================
-   ABAS 
+   ABAS
    ========================================================= */
 .tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 10px;
   margin-bottom: 1rem;
+  justify-content: center;
 }
 
 .tab-btn {
-  border: 1px solid #1f2937;
+  border: 1px solid rgba(255, 255, 255, .14);
   background: #111827;
-  color: #e5e7eb;
-  border-radius: 999px;
-  padding: 0.55rem 1.2rem;
+  color: var(--text);
+  border-radius: var(--radiusPill);
+  padding: 12px 18px;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 700;
-  transition: transform 0.1s, box-shadow 0.1s, opacity 0.1s;
+  font-size: 0.92rem;
+  font-weight: 800;
+  transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tab-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
 }
 
 .tab-btn:active {
-  transform: scale(0.97);
+  transform: translateY(0px) scale(.98);
 }
 
 .tab-btn.active {
-  background: #facc15;
-  color: #1f2937;
-  box-shadow: 0 8px 20px rgba(250, 204, 21, 0.3);
+  background: linear-gradient(135deg, #ffcc00, #ffb703);
+  color: #1a1a1a;
   border-color: transparent;
+  box-shadow: 0 8px 20px rgba(250, 204, 21, 0.25);
 }
 
 /* qualquer painel que estiver com hidden some */
@@ -382,40 +503,7 @@ tr:nth-child(even) {
   display: none !important;
 }
 
-/* =========================================================
-   AJUSTES PARA O HTML NOVO (Serviços + Peças)
-   ========================================================= */
-
-/* garante layout dos botões do bloco .actions do HTML */
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
-}
-
-/* melhora alinhamento e aparência da faixa de totais que você usa como .totals */
-.totals {
-  margin-top: 0.75rem;
-  padding: 0.65rem 0.9rem;
-  border: 1px solid #111827;
-  background: #020617;
-  border-radius: 10px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  font-size: 0.95rem;
-}
-
-/* tabela do orçamento gerado: garante consistência com .table-wrapper */
+/* tabela do orçamento gerado */
 .table-wrapper table {
   min-width: 520px;
-  /* evita quebra feia em telas pequenas */
-}
-
-/* botões dentro de tabelas (remover) ficam mais "compactos" sem precisar inline-style */
-table button.btn.danger {
-  padding: 0.25rem 0.6rem;
-  font-size: 0.75rem;
-  border-radius: 999px;
 }
