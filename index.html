@@ -339,17 +339,24 @@
 
     </main>
 
-    <!-- Scripts -->
+    <!-- jsPDF (SEMPRE PRIMEIRO) -->
+    <script src="libs/jspdf.umd.min.js"></script>
+    <script src="libs/jspdf.plugin.autotable.min.js"></script>
+
+    <!-- Core do sistema -->
     <script src="libs/core.js"></script>
-    <script src="libs/storage.js"></script>
     <script src="libs/dom.js"></script>
+    <script src="libs/storage.js"></script>
     <script src="libs/tabs.js"></script>
     <script src="libs/estoque.js"></script>
     <script src="libs/orcamento.js"></script>
+
+    <!-- PDF (SEMPRE DEPOIS DO jsPDF) -->
     <script src="libs/pdf.js"></script>
-    <script src="libs/validators.js"></script>
-    <script src="libs/pro-modal.js"></script>
+
+    <!-- App bootstrap -->
     <script src="app.js"></script>
+
 </body>
 
 </html>
