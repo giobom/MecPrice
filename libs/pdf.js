@@ -1,90 +1,226 @@
 (() => {
     "use strict";
 
-    const { AppContext, formatBRL, toNumber } = window.MecPrice.core;
-    const DOM = window.MecPrice.dom;
-    const Orc = window.MecPrice.orcamento;
+    function safeText(v) {
+        return (v ?? "").toString().trim();
+    }
+
+    function onlySafeFilename(text) {
+        return safeText(text)
+            .replace(/[\\/:*?"<>|]+/g, "-")
+            .replace(/\s+/g, "_")
+            .slice(0, 60);
+    }
+
+    function getJsPDF() {
+        // jsPDF UMD costuma vir em window.jspdf.jsPDF
+        if (window.jspdf?.jsPDF) return window.jspdf.jsPDF;
+        // fallback raro
+        if (window.jsPDF) return window.jsPDF;
+        return null;
+    }
+
+    function asBRL(value) {
+        // tenta usar o core, se existir
+        const core = window.MecPrice?.core;
+        if (core?.formatBRL) return core.formatBRL(value);
+
+        const n = Number(value);
+        const ok = Number.isFinite(n) ? n : 0;
+        return ok.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    }
 
     function gerarPDF() {
-        if (AppContext.plan === "pro") return gerarPDFPro();
-        return gerarPDFOrcamento();
-    }
+        const MecPrice = window.MecPrice;
+        const DOM = MecPrice?.dom;
+        const Orc = MecPrice?.orcamento;
 
-    function gerarPDFPro() {
-        alert("PDF PRO ainda não implementado. (Depois: logo, dados da oficina, garantias.)");
-    }
-
-    function gerarPDFOrcamento() {
-        const { jsPDF } = window.jspdf || {};
-        if (!jsPDF) {
-            alert("Biblioteca de PDF não carregou. Verifique se adicionou jsPDF no index.html.");
+        const JsPDF = getJsPDF();
+        if (!JsPDF) {
+            alert("jsPDF não carregou. Verifique se libs/jspdf.umd.min.js está sendo carregado.");
             return;
         }
 
-        const cliente =
-            (DOM.orcCliente?.textContent || "").trim() || (DOM.clienteInput?.value || "").trim();
-        const servico =
-            (DOM.orcDescricao?.textContent || "").trim() || (DOM.descricaoInput?.value || "").trim();
-        const data = (DOM.orcData?.textContent || "").trim() || new Date().toLocaleDateString("pt-BR");
+        // Garante que o orçamento esteja gerado/validado
+        if (Orc?.validarDadosPrincipais && !Orc.validarDadosPrincipais()) return;
+        // Se o card estiver escondido, tenta gerar antes
+        if (DOM?.cardOrcamento?.hidden && Orc?.gerarOrcamento) Orc.gerarOrcamento();
 
-        const pecas = Orc.getPecas();
-        const linhas = (pecas || []).map((p) => {
-            const qtd = toNumber(p.qtd, 0);
-            const unit = toNumber(p.valor, 0);
-            const tot = qtd * unit;
-            return [p.nome || "", String(qtd), formatBRL(unit), formatBRL(tot)];
-        });
+        const doc = new JsPDF({ unit: "pt", format: "a4" });
 
-        const { totalPecas, maoDeObra, totalGeral } = Orc.calcularTotais();
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const margin = 40;
 
-        const doc = new jsPDF({ unit: "mm", format: "a4" });
+        const cliente = safeText(DOM?.clienteInput?.value);
+        const telefone = safeText(DOM?.telefoneInput?.value);
+        const cpfCnpj = safeText(DOM?.cpfCnpjInput?.value);
+        const placa = safeText(DOM?.placaInput?.value);
+        const modelo = safeText(DOM?.modeloInput?.value);
+        const ano = safeText(DOM?.anoInput?.value);
+        const km = safeText(DOM?.kmInput?.value);
+        const obs = safeText(DOM?.descricaoInput?.value);
 
+        const servicos = (Orc?.getServicos?.() || []).map((s) => ({
+            nome: safeText(s.nome),
+            qtd: Number(s.qtd) || 0,
+            valor: Number(s.valor) || 0,
+            total: (Number(s.qtd) || 0) * (Number(s.valor) || 0),
+        }));
+
+        const pecas = (Orc?.getPecas?.() || []).map((p) => ({
+            nome: safeText(p.nome),
+            qtd: Number(p.qtd) || 0,
+            valor: Number(p.valor) || 0,
+            total: (Number(p.qtd) || 0) * (Number(p.valor) || 0),
+        }));
+
+        const totals = Orc?.calcularTotais?.()
+            ? Orc.calcularTotais()
+            : {
+                totalPecas: pecas.reduce((a, p) => a + p.total, 0),
+                totalServicos: servicos.reduce((a, s) => a + s.total, 0),
+                totalGeral:
+                    pecas.reduce((a, p) => a + p.total, 0) +
+                    servicos.reduce((a, s) => a + s.total, 0),
+            };
+
+        // ===== Cabeçalho
         doc.setFont("helvetica", "bold");
         doc.setFontSize(18);
-        doc.text("MecPrice", 14, 18);
-
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(11);
-        doc.text("Orçamento automotivo", 14, 25);
-
-        doc.setFontSize(12);
-        doc.text(`Cliente: ${cliente}`, 14, 35);
-        doc.text(`Serviço: ${servico}`, 14, 42);
-        doc.text(`Data: ${data}`, 14, 49);
-
-        doc.setFont("helvetica", "bold");
-        doc.text("Peças", 14, 60);
-
-        doc.autoTable({
-            startY: 64,
-            head: [["Peça", "Qtd", "Unitário", "Total"]],
-            body: linhas.length ? linhas : [["(nenhuma peça adicionada)", "-", "-", "-"]],
-            styles: { font: "helvetica", fontSize: 10 },
-            headStyles: { fillColor: [25, 35, 60] },
-            margin: { left: 14, right: 14 },
-        });
-
-        const y = doc.lastAutoTable.finalY + 10;
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(12);
-        doc.text(`Total de peças: ${formatBRL(totalPecas)}`, 14, y);
-        doc.text(`Mão de obra: ${formatBRL(maoDeObra)}`, 14, y + 7);
-
-        doc.setFont("helvetica", "bold");
-        doc.text(`Total geral: ${formatBRL(totalGeral)}`, 14, y + 16);
+        doc.text("MecPrice — Orçamento", margin, 55);
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(10);
-        doc.text("____________________________________", 14, y + 35);
-        doc.text("Assinatura / Responsável", 14, y + 40);
+        const dataHoje = new Date().toLocaleDateString("pt-BR");
+        doc.text(`Data: ${dataHoje}`, pageWidth - margin, 55, { align: "right" });
 
-        const safeCliente = (cliente || "cliente")
-            .replace(/[^\w\s-]/g, "")
-            .trim()
-            .replace(/\s+/g, "_");
+        // ===== Bloco dados
+        let y = 85;
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.text("Dados do Cliente", margin, y);
+        y += 16;
 
-        doc.save(`MecPrice_Orcamento_${safeCliente}_${new Date().toISOString().slice(0, 10)}.pdf`);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+
+        const linhas = [
+            `Cliente: ${cliente || "-"}`,
+            `Telefone: ${telefone || "-"}`,
+            `CPF/CNPJ: ${cpfCnpj || "-"}`,
+            `Veículo: ${modelo || "-"}`,
+            `Placa: ${placa || "-"}`,
+            `Ano: ${ano || "-"}`,
+            `KM: ${km || "-"}`,
+        ];
+
+        linhas.forEach((line) => {
+            doc.text(line, margin, y);
+            y += 14;
+        });
+
+        y += 4;
+        doc.setFont("helvetica", "bold");
+        doc.text("Observações", margin, y);
+        y += 14;
+        doc.setFont("helvetica", "normal");
+        const obsText = obs || "-";
+        const obsWrapped = doc.splitTextToSize(obsText, pageWidth - margin * 2);
+        doc.text(obsWrapped, margin, y);
+        y += obsWrapped.length * 12 + 10;
+
+        // ===== Serviços (Tabela)
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text("Serviços", margin, y);
+        y += 10;
+
+        if (doc.autoTable) {
+            doc.autoTable({
+                startY: y,
+                head: [["Serviço", "Qtd", "Unitário", "Total"]],
+                body: servicos.length
+                    ? servicos.map((s) => [
+                        s.nome || "-",
+                        String(s.qtd || 0),
+                        asBRL(s.valor),
+                        asBRL(s.total),
+                    ])
+                    : [["(Sem serviços)", "-", "-", "-"]],
+                styles: { font: "helvetica", fontSize: 9 },
+                headStyles: { fontStyle: "bold" },
+                theme: "grid",
+                margin: { left: margin, right: margin },
+                columnStyles: {
+                    0: { cellWidth: 260 },
+                    1: { halign: "right", cellWidth: 45 },
+                    2: { halign: "right", cellWidth: 90 },
+                    3: { halign: "right", cellWidth: 90 },
+                },
+            });
+
+            y = doc.lastAutoTable.finalY + 18;
+
+            // ===== Peças (Tabela)
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(12);
+            doc.text("Peças", margin, y);
+            y += 10;
+
+            doc.autoTable({
+                startY: y,
+                head: [["Peça", "Qtd", "Unitário", "Total"]],
+                body: pecas.length
+                    ? pecas.map((p) => [
+                        p.nome || "-",
+                        String(p.qtd || 0),
+                        asBRL(p.valor),
+                        asBRL(p.total),
+                    ])
+                    : [["(Sem peças)", "-", "-", "-"]],
+                styles: { font: "helvetica", fontSize: 9 },
+                headStyles: { fontStyle: "bold" },
+                theme: "grid",
+                margin: { left: margin, right: margin },
+                columnStyles: {
+                    0: { cellWidth: 260 },
+                    1: { halign: "right", cellWidth: 45 },
+                    2: { halign: "right", cellWidth: 90 },
+                    3: { halign: "right", cellWidth: 90 },
+                },
+            });
+
+            y = doc.lastAutoTable.finalY + 18;
+        } else {
+            // fallback se o autotable não carregou
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.text("(AutoTable não carregou. Verifique libs/jspdf.plugin.autotable.min.js)", margin, y);
+            y += 20;
+        }
+
+        // ===== Totais
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text("Totais", margin, y);
+        y += 14;
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(11);
+
+        doc.text(`Total serviços: ${asBRL(totals.totalServicos)}`, margin, y);
+        y += 14;
+        doc.text(`Total peças: ${asBRL(totals.totalPecas)}`, margin, y);
+        y += 14;
+
+        doc.setFont("helvetica", "bold");
+        doc.text(`Total geral: ${asBRL(totals.totalGeral)}`, margin, y);
+
+        // ===== Salvar
+        const nomeArquivo = `Orcamento_${onlySafeFilename(cliente || "cliente")}_${dataHoje.replace(/\//g, "-")}.pdf`;
+        doc.save(nomeArquivo);
     }
 
+    window.MecPrice = window.MecPrice || {};
     window.MecPrice.pdf = { gerarPDF };
 })();
