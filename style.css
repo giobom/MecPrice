@@ -381,3 +381,41 @@ tr:nth-child(even) {
 [hidden] {
   display: none !important;
 }
+
+/* =========================================================
+   AJUSTES PARA O HTML NOVO (Serviços + Peças)
+   ========================================================= */
+
+/* garante layout dos botões do bloco .actions do HTML */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+/* melhora alinhamento e aparência da faixa de totais que você usa como .totals */
+.totals {
+  margin-top: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid #111827;
+  background: #020617;
+  border-radius: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+/* tabela do orçamento gerado: garante consistência com .table-wrapper */
+.table-wrapper table {
+  min-width: 520px;
+  /* evita quebra feia em telas pequenas */
+}
+
+/* botões dentro de tabelas (remover) ficam mais "compactos" sem precisar inline-style */
+table button.btn.danger {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  border-radius: 999px;
+}
