@@ -44,9 +44,7 @@ body {
     linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 55%, var(--bg3) 100%);
 }
 
-/* =========================================================
-   TOPO
-   ========================================================= */
+/* TOPO */
 .topbar {
   padding: 1.2rem 1rem;
   text-align: center;
@@ -64,18 +62,14 @@ body {
   color: var(--muted);
 }
 
-/* =========================================================
-   LAYOUT PRINCIPAL
-   ========================================================= */
+/* LAYOUT PRINCIPAL */
 .container {
   max-width: 1280px;
   margin: 1.1rem auto;
   padding: 0 1rem 2rem;
 }
 
-/* =========================================================
-   CARDS / PAINÉIS
-   ========================================================= */
+/* CARDS / PAINÉIS */
 .card,
 .panel {
   background: var(--panel);
@@ -87,7 +81,6 @@ body {
   max-width: 1040px;
 }
 
-/* títulos internos */
 .card h2,
 .panel-title {
   margin-bottom: 0.75rem;
@@ -95,12 +88,11 @@ body {
   font-weight: 800;
 }
 
-/* =========================================================
-   FORMULÁRIOS / INPUTS
-   ========================================================= */
+/* FORMULÁRIOS / INPUTS */
 .form-grid {
   display: grid;
   gap: 1rem;
+  row-gap: 16px;
 }
 
 @media (min-width: 768px) {
@@ -143,7 +135,7 @@ textarea:focus {
   box-shadow: var(--focus);
 }
 
-/* Layout novo */
+/* Layouts auxiliares */
 .grid-3 {
   display: grid;
   gap: 1rem;
@@ -195,9 +187,7 @@ textarea:focus {
   }
 }
 
-/* =========================================================
-   BOTÕES 
-   ========================================================= */
+/* BOTÕES (PADRÃO) */
 .btn {
   border: none;
   border-radius: var(--radiusPill);
@@ -210,7 +200,6 @@ textarea:focus {
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
-
   transition: transform .12s ease, filter .12s ease, box-shadow .12s ease, opacity .12s ease;
   box-shadow: var(--shadowSoft);
   user-select: none;
@@ -265,21 +254,7 @@ textarea:focus {
   color: #fff;
 }
 
-/* Botão “Adicionar” (peça/serviço)  */
-.btn-add {
-  background: #0f172a;
-  color: #93c5fd;
-  border: 1px dashed rgba(147, 197, 253, .35);
-  box-shadow: none;
-}
-
-.btn-add:hover {
-  background: #111c3a;
-}
-
-/* =========================================================
-   AÇÕES 
-   ========================================================= */
+/* AÇÕES (ALINHAMENTO) */
 .actions,
 .actions-row,
 .actions-card .actions {
@@ -288,11 +263,9 @@ textarea:focus {
   gap: 12px;
   margin-top: 0.9rem;
   justify-content: center;
-  /* centraliza como no print 4 */
   align-items: center;
 }
 
-/* Mobile: empilha e deixa confortável */
 @media (max-width: 480px) {
 
   .actions,
@@ -309,9 +282,7 @@ textarea:focus {
   }
 }
 
-/* =========================================================
-   TABELAS
-   ========================================================= */
+/* TABELAS */
 .table-wrapper,
 .table-wrap {
   width: 100%;
@@ -351,7 +322,6 @@ tr:nth-child(even) {
   text-align: right;
 }
 
-/* botões dentro de tabelas */
 table button.btn.danger,
 table button.btn-danger {
   padding: 6px 10px;
@@ -360,9 +330,7 @@ table button.btn-danger {
   box-shadow: none;
 }
 
-/* =========================================================
-   TOTAIS
-   ========================================================= */
+/* TOTAIS */
 .totals-row {
   display: flex;
   justify-content: flex-end;
@@ -392,9 +360,7 @@ table button.btn-danger {
   font-size: 0.95rem;
 }
 
-/* =========================================================
-   ORÇAMENTO FINAL
-   ========================================================= */
+/* ORÇAMENTO FINAL */
 .orcamento-header {
   display: flex;
   flex-direction: column;
@@ -428,9 +394,7 @@ table button.btn-danger {
   font-size: 1.1rem;
 }
 
-/* =========================================================
-   MENSAGENS
-   ========================================================= */
+/* MENSAGENS */
 .error-msg {
   color: #f97316;
   font-size: 0.85rem;
@@ -445,9 +409,7 @@ table button.btn-danger {
   min-height: 1rem;
 }
 
-/* =========================================================
-   FOOTER
-   ========================================================= */
+/* FOOTER */
 .footer {
   text-align: center;
   padding: 1.25rem;
@@ -457,9 +419,7 @@ table button.btn-danger {
   background: var(--panel);
 }
 
-/* =========================================================
-   ABAS
-   ========================================================= */
+/* ABAS */
 .tabs {
   display: flex;
   flex-wrap: wrap;
@@ -498,22 +458,24 @@ table button.btn-danger {
   box-shadow: 0 8px 20px rgba(250, 204, 21, 0.25);
 }
 
-/* qualquer painel que estiver com hidden some */
 [hidden] {
   display: none !important;
 }
 
-/* tabela do orçamento gerado */
 .table-wrapper table {
   min-width: 520px;
 }
 
-/* =========================================
-   BOTÕES "ADICIONAR" (serviço / peça)
-   ========================================= */
+/* =========================================================
+   BOTÕES "ADICIONAR" (serviço / peça) - ÚNICO BLOCO (corrigido)
+   ========================================================= */
 
-/* Se você puder colocar a classe .btn-add no HTML, melhor.
-   Mas também vou cobrir botões que tenham texto "Adicionar" ou ids comuns. */
+/* Espaçamento para não grudar no input de Valor */
+.btn-add {
+  margin-top: 14px;
+}
+
+/* Estilo dourado MecPrice */
 .btn-add,
 button[id*="add" i],
 button[id*="adicionar" i],
@@ -531,7 +493,7 @@ button[class*="adicionar" i] {
       rgba(250, 204, 21, 0.22),
       rgba(250, 204, 21, 0.10));
   color: #fef3c7;
-  /* texto claro com tom quente */
+
   font-weight: 800;
   letter-spacing: .2px;
 
@@ -547,11 +509,8 @@ button[class*="adicionar" i] {
   transition: transform .12s ease, filter .12s ease, box-shadow .12s ease, border-color .12s ease;
   -webkit-tap-highlight-color: transparent;
 }
-.add-action {
-  margin-top: 16px;
-}
 
-/* Ícone (sem depender de biblioteca) */
+/* Ícone + (não deve roubar clique) */
 .btn-add::before,
 button[id*="add" i]::before,
 button[id*="adicionar" i]::before,
@@ -570,9 +529,11 @@ button[class*="adicionar" i]::before {
   color: #fde68a;
   font-weight: 900;
   line-height: 1;
+
+  pointer-events: none;
+  /* ✅ garante que o + não atrapalha o clique */
 }
 
-/* Hover / active */
 .btn-add:hover,
 button[id*="add" i]:hover,
 button[id*="adicionar" i]:hover,
@@ -598,7 +559,6 @@ button[class*="adicionar" i]:active {
     0 0 0 1px rgba(255, 255, 255, .05) inset;
 }
 
-/* Focus acessível */
 .btn-add:focus-visible,
 button[id*="add" i]:focus-visible,
 button[id*="adicionar" i]:focus-visible,
@@ -610,7 +570,6 @@ button[class*="adicionar" i]:focus-visible {
     0 12px 26px rgba(0, 0, 0, .30);
 }
 
-/* Mobile: deixa grande, bonito e fácil de clicar */
 @media (max-width: 520px) {
 
   .btn-add,
