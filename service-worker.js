@@ -1,4 +1,4 @@
-const CACHE_NAME = "mecprice-v1.1.3";
+const CACHE_NAME = "mecprice-v1.1.4";
 
 const URLS_TO_CACHE = [
   "./",
