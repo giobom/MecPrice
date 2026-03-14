@@ -61,9 +61,10 @@
         cardUltimoOrcamento: $("cardUltimoOrcamento"),
         btnCarregarUltimo: $("btnCarregarUltimo"),
 
-        // ===== ESTOQUE
+        // ===== ESTOQUE (Atualizado)
         estNome: $("estNome"),
-        estSku: $("estSku"),
+        estCodigo: $("estCodigo"), // Atualizado de estSku para estCodigo
+        estNcm: $("estNcm"),       // Novo campo NCM
         estCat: $("estCat"),
         estCusto: $("estCusto"),
         estPreco: $("estPreco"),
