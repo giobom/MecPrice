@@ -2,7 +2,7 @@
   "name": "MecPrice – Orçamentos Automotivos",
   "short_name": "MecPrice",
   "description": "Sistema de orçamentos automotivos com controle de peças, estoque e geração de PDF. PWA instalável.",
-  "version": "1.1.0",
+  "version": "1.1.01",
   "lang": "pt-BR",
   "start_url": "./",
   "scope": "./",
