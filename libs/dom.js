@@ -4,7 +4,7 @@
     const $ = (id) => document.getElementById(id);
 
     window.MecPrice.dom = {
-        // ===== ORÇAMENTO (inputs principais)
+        // Orçamento
         clienteInput: $("cliente"),
         telefoneInput: $("telefone"),
         cpfCnpjInput: $("cpfCnpj"),
@@ -13,58 +13,40 @@
         anoInput: $("ano"),
         kmInput: $("km"),
         descricaoInput: $("descricao"),
+        maoDeObraInput: $("maoDeObra"),
 
         erroPrincipal: $("erroPrincipal"),
         erroPeca: $("erroPeca"),
         mensagemAcao: $("mensagemAcao"),
 
-        // ===== PEÇAS (entrada + tabela)
-        nomePecaInput: $("nomePeca"),
-        qtdPecaInput: $("qtdPeca"),
-        valorPecaInput: $("valorPeca"),
-        btnAdicionarPeca: $("btnAdicionarPeca"),
-
         tabelaPecas: $("tabelaPecas"),
         totalPecasSpan: $("totalPecas"),
 
-        // ===== SERVIÇOS (entrada + tabela)
-        servNome: $("servNome"),
-        servQtd: $("servQtd"),
-        servValor: $("servValor"),
-        btnAddServico: $("btnAddServico"),
+        cardOrcamento: $("cardOrcamento"),
+        orcCliente: $("orcCliente"),
+        orcDescricao: $("orcDescricao"),
+        orcData: $("orcData"),
+        orcPecas: $("orcPecas"),
+        orcTotalPecas: $("orcTotalPecas"),
+        orcMaoDeObra: $("orcMaoDeObra"),
+        orcTotalGeral: $("orcTotalGeral"),
 
-        tbodyServicos: $("tbodyServicos"),
-        totalServicos: $("totalServicos"),
+        cardUltimoOrcamento: $("cardUltimoOrcamento"),
+        btnCarregarUltimo: $("btnCarregarUltimo"),
 
-        // ===== AÇÕES
+        btnAdicionarPeca: $("btnAdicionarPeca"),
         btnGerar: $("btnGerar"),
         btnSalvar: $("btnSalvar"),
         btnLimpar: $("btnLimpar"),
         btnPDF: $("btnPDF"),
 
-        // ===== ORÇAMENTO GERADO (resumo)
-        cardOrcamento: $("cardOrcamento"),
-        orcCliente: $("orcCliente"),
-        orcDescricao: $("orcDescricao"),
-        orcData: $("orcData"),
+        nomePecaInput: $("nomePeca"),
+        qtdPecaInput: $("qtdPeca"),
+        valorPecaInput: $("valorPeca"),
 
-        // Tabelas do resumo
-        orcServicos: $("orcServicos"),
-        orcPecas: $("orcPecas"),
-
-        // Totais do resumo
-        orcTotalServicos: $("orcTotalServicos"),
-        orcTotalPecas: $("orcTotalPecas"),
-        orcTotalGeral: $("orcTotalGeral"),
-
-        // ===== ÚLTIMO ORÇAMENTO
-        cardUltimoOrcamento: $("cardUltimoOrcamento"),
-        btnCarregarUltimo: $("btnCarregarUltimo"),
-
-        // ===== ESTOQUE (Atualizado)
+        // Estoque
         estNome: $("estNome"),
-        estCodigo: $("estCodigo"), // Atualizado de estSku para estCodigo
-        estNcm: $("estNcm"),       // Novo campo NCM
+        estSku: $("estSku"),
         estCat: $("estCat"),
         estCusto: $("estCusto"),
         estPreco: $("estPreco"),
