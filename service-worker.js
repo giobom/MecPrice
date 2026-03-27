@@ -1,4 +1,4 @@
-const CACHE_NAME = "mecprice-orcamento-v1,002";
+const CACHE_NAME = "mecprice-orcamento-v1";
 const URLS_TO_CACHE = [
   "./",
   "./index.html",
